@@ -1,5 +1,16 @@
+# LinuxForHealth core Makefile
+
 FROZEN_REQUIREMENTS = frozen-requirements.txt
 VIRTUAL_ENVIRONMENT_DIR = venv
+
+# executes tests for a LinuxForHealth core component
+# arguments:
+# $1 - the component name (aligns with top level directory)
+define execute_tests
+	cd $(1) && \
+	source $(VIRTUAL_ENVIRONMENT_DIR)/bin/activate && \
+	python3 -m pytest
+endef
 
 # removes the components virtual environment
 # arguments:
@@ -12,6 +23,7 @@ endef
 # builds the component's virtual environment
 # arguments:
 # $1 - the component name (aligns with top level directory)
+# $2 - the setup.cfg build "extra" group to include. Example: "all" or "dev"
 define build_component_venv
 	cd $(1) && \
 	python3 -m venv $(VIRTUAL_ENVIRONMENT_DIR) && \
@@ -29,8 +41,14 @@ clean-connect-venv:
 connect-venv: clean-connect-venv
 	$(call build_component_venv,connect,all)
 
+activate-connect-venv:
+	$(call activate_venv,connect)
+
 connect-dev-venv: clean-connect-venv
 	$(call build_component_venv,connect,dev)
 
+connect-test:
+	$(call execute_tests,connect)
 
-.PHONY: clean-connect-venv, connect-venv, connect-dev-venv
+
+.PHONY: clean-connect-venv, connect-venv, connect-dev-venv, connect-test
