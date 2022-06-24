@@ -19,7 +19,7 @@ httptools==0.4.0
 idna==3.3
 iniconfig==1.1.1
 kafka-python==2.0.2
--e git+ssh://git@github.com/LinuxForHealth/core.git@8d53384f2d48f470041c24d333e3309f1ee3374f#egg=linuxforhealth_core_connect&subdirectory=connect
+-e git+ssh://git@github.com/LinuxForHealth/core.git@e8f1139503415418f7b79a6478ab5f4c768f69d2#egg=linuxforhealth_core_connect&subdirectory=connect
 mode-streaming==0.2.0
 multidict==6.0.2
 mypy-extensions==0.4.3
