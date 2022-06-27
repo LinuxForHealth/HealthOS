@@ -11,15 +11,22 @@ charset-normalizer==2.0.12
 click==8.0.4
 colorlog==6.6.0
 croniter==1.3.5
+dnspython==2.2.1
+email-validator==1.2.1
 fastapi==0.78.0
 faust-streaming==0.8.5
+fhir.resources==6.4.0
 frozenlist==1.3.0
 h11==0.13.0
+hl7==0.4.5
 httptools==0.4.0
 idna==3.3
 iniconfig==1.1.1
 kafka-python==2.0.2
--e git+ssh://git@github.com/LinuxForHealth/core.git@ea4b8c11caaebfb4fb8ba17222bc9b837bc0bf02#egg=linuxforhealth_core_connect&subdirectory=connect
+-e git+ssh://git@github.com/LinuxForHealth/core.git@98cadf16e7a95e991fe7dcb6bff374eb4ccb5858#egg=linuxforhealth_core_connect&subdirectory=connect
+linuxforhealth-edi==0.28.0
+linuxforhealth-x12==0.57.0
+lxml==4.9.0
 mode-streaming==0.2.0
 multidict==6.0.2
 mypy-extensions==0.4.3
@@ -30,7 +37,9 @@ pathspec==0.9.0
 platformdirs==2.5.2
 pluggy==1.0.0
 py==1.11.0
+pyaml==21.10.1
 pydantic==1.9.1
+pydicom==2.3.0
 pyparsing==3.0.9
 pytest==7.1.2
 python-dateutil==2.8.2

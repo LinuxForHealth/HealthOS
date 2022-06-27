@@ -33,7 +33,8 @@ classifiers = [
     "Intended Audience :: System Administrators"
 ]
 dependencies = [
-    "pydantic >= 1.9"
+    "pydantic >= 1.9",
+    "linuxforhealth-edi >= 0.28.0"
 ]
 
 [project.optional-dependencies]
