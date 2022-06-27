@@ -132,4 +132,4 @@ dmypy.json
 .idea
 .vscode
 
-frozen-requirements.txt
+**/frozen-requirements.txt

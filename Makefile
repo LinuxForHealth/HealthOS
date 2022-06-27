@@ -21,16 +21,25 @@ endef
 
 
 # builds the component's virtual environment
+# existing virtual environments and "frozen" requirements are reused if available
 # arguments:
 # $1 - the component name (aligns with top level directory)
 # $2 - the setup.cfg build "extra" group to include. Example: "all" or "dev"
 define build_component_venv
-	cd $(1) && \
-	python3 -m venv $(VIRTUAL_ENVIRONMENT_DIR) && \
-	source $(VIRTUAL_ENVIRONMENT_DIR)/bin/activate && \
-	python3 -m pip install --upgrade pip setuptools && \
-	python3 -m pip install -e ".[$(2)]" && \
-	python3 -m pip freeze > frozen-requirements.txt
+	if [ ! -d "./$(1)/$(VIRTUAL_ENVIRONMENT_DIR)" ]; then \
+		python3 -m venv $(1)/$(VIRTUAL_ENVIRONMENT_DIR); \
+		$(1)/$(VIRTUAL_ENVIRONMENT_DIR)/bin/python3 -m pip install --upgrade pip setuptools; \
+	fi
+
+	if [ -f "./$(1)/$(FROZEN_REQUIREMENTS)" ]; then \
+		$(1)/$(VIRTUAL_ENVIRONMENT_DIR)/bin/python3 -m pip install -r "./$(1)/$(FROZEN_REQUIREMENTS)"; \
+	fi
+
+	cd $(1) && $(VIRTUAL_ENVIRONMENT_DIR)/bin/python3 -m pip install -e ".[$(2)]";
+
+	if [ ! -f "./$(1)/$(FROZEN_REQUIREMENTS)" ]; then \
+		$(1)/$(VIRTUAL_ENVIRONMENT_DIR)/bin/python3 -m pip freeze > $(1)/$(FROZEN_REQUIREMENTS); \
+	fi
 endef
 
 all: connect-venv
@@ -38,13 +47,13 @@ all: connect-venv
 clean-connect-venv:
 	$(call clean_venv,connect)
 
-connect-venv: clean-connect-venv
+connect-venv:
 	$(call build_component_venv,connect,all)
 
 activate-connect-venv:
 	$(call activate_venv,connect)
 
-connect-dev-venv: clean-connect-venv
+connect-dev-venv:
 	$(call build_component_venv,connect,dev)
 
 connect-test:

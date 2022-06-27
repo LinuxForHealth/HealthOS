@@ -22,12 +22,20 @@ mbp core % tree -d -L 1
 └── sync
 ```
 
-To build a component specify `make build` followed by the component name
+#### Create Local Development Environment and run tests
+
+The Makefile provides separate targets for each component's virtual environment build and tests. Targets following the
+naming convention clean-<component name>-venv, <component name>-dev-venv, and <component name>-test.
+
 ```shell
-make build COMPONENT_NAME=connect
+make clean-connect-venv
+make connect-dev-venv
+make connect-test
 ```
 
-## Core Processing
+#### Local Development IDE Integration
 
-TODO: Add Core Diagram Processing
+For the best IDE experience:
 
+- Use `make` to create a development virtual environment for each component
+- Open the component sub-directory within the IDE and configure the environment accordingly
