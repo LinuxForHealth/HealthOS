@@ -52,10 +52,15 @@ def test_regex_validations_exception(config_data: Dict, field_name: str):
     [
         ("security_protocol", ["PLAINTEXT", "SSL", "SASL_PLAINTEXT", "SASL_SSL"]),
         ("isolation_level", ["read_uncommitted", "read_committed"]),
-        ("sasl_mechanism", ["PLAIN", "GSSAPI", "SCRAM-SHA-256", "SCRAM-SHA-512", "OAUTHBEARER"]),
+        (
+            "sasl_mechanism",
+            ["PLAIN", "GSSAPI", "SCRAM-SHA-256", "SCRAM-SHA-512", "OAUTHBEARER"],
+        ),
     ],
 )
-def test_regex_validations_valid_values(config_data: Dict, field_name: str, valid_values: List):
+def test_regex_validations_valid_values(
+    config_data: Dict, field_name: str, valid_values: List
+):
     """Validates regex validations raise a ValidationError when an invalid value is present"""
     execution_count = 0
 

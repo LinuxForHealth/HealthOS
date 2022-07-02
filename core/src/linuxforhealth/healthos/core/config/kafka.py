@@ -240,6 +240,8 @@ class KafkaProducerConfig(BaseModel):
         """
         acks_value = values.get("acks")
         if field_value is True and acks_value != "all":
-            raise ValueError("acks must be set to ALL if idempotent transactions are enabled")
+            raise ValueError(
+                "acks must be set to ALL if idempotent transactions are enabled"
+            )
 
         return values
