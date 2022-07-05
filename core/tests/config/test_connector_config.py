@@ -66,6 +66,7 @@ def test_validate_connector_type_config():
         "kafka-consumer-connector.yaml",
         "kafka-producer-connector.yaml",
         "nats-client-connector.yaml",
+        "rest-endpoint-connector.yaml"
     ],
 )
 def test_load_connector_configuration(resources_path: str, config_file_name: str):

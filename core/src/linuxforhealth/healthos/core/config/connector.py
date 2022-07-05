@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, root_validator
 from .kafka import KafkaConsumerConfig, KafkaProducerConfig
 from .nats import NatsClientConfig
+from .rest import RestEndpointConfig
 from typing import Dict
 import yaml
 
@@ -9,8 +10,8 @@ class ConnectorConfig(BaseModel):
     """maps connector type to compatible configs"""
 
     _connector_type_config = {
-        "inbound": ("KafkaConsumer", "NatsClient"),
-        "outbound": ("KafkaProducer",),
+        "inbound": ("KafkaConsumer", "NatsClient", "RestEndpoint"),
+        "outbound": ("KafkaProducer", "NatsClient", "RestEndpoint"),
     }
     type: str = Field(
         description="Indicates if the connector is used for receiving (inbound) or "
@@ -18,7 +19,7 @@ class ConnectorConfig(BaseModel):
         regex="^(inbound|outbound)$",
     )
     name: str = Field(description="The user defined connector name")
-    config: KafkaProducerConfig | KafkaConsumerConfig | NatsClientConfig = Field(
+    config: KafkaProducerConfig | KafkaConsumerConfig | NatsClientConfig | RestEndpointConfig = Field(
         description="The connector configuration settings"
     )
 
