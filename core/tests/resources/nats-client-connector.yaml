@@ -1,0 +1,5 @@
+type: inbound
+name: Test NATS Client
+config:
+  type: NatsClient
+  servers: nats://localhost:4222

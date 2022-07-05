@@ -5,13 +5,13 @@ Tests the Kafka Producer configuration model
 """
 import pytest
 from typing import Dict, List
-from linuxforhealth.healthos.core.config import KafkaProducerConfig
+from linuxforhealth.healthos.core.config.kafka import KafkaProducerConfig
 from pydantic import ValidationError
 
 
 @pytest.fixture
 def config_data() -> Dict:
-    return {"bootstrap_servers": "localhost:9092"}
+    return {"type": "KafkaProducer", "bootstrap_servers": "localhost:9092"}
 
 
 def test_validate_minimum_input(config_data: Dict):

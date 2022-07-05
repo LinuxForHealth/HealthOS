@@ -1,0 +1,5 @@
+type: outbound
+name: Unit Test Kafka Producer
+config:
+  type: KafkaProducer
+  bootstrap_servers: localhost:9092

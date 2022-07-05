@@ -5,13 +5,15 @@ Pydantic models used to support external yaml configurations for Kafka Consumers
 The Pydantic BaseModel is used rather than BaseSettings specifically to exclude environment overrides.
 """
 from pydantic import BaseModel, Field, root_validator, validator
-from typing import List, Optional
+from typing import List, Optional, Literal
 
 
 class KafkaConsumerConfig(BaseModel):
     """
     Kafka Consumer Configuration Settings
     """
+
+    type: Literal["KafkaConsumer"]
 
     topics: List[str] = Field(
         description="The Kafka topics to subscribe to. Multiple values are separated by commas."
@@ -151,6 +153,8 @@ class KafkaProducerConfig(BaseModel):
     Kafka Producer Configuration Settings
     """
 
+    type: Literal["KafkaProducer"]
+
     bootstrap_servers: str | List = Field(
         description="host[:port] or list of host[:port] the producer connects to."
     )
@@ -229,6 +233,10 @@ class KafkaProducerConfig(BaseModel):
             values["acks"] = "all"
 
         return values
+
+    class Config:
+        extra = "ignore"
+        frozen = True
 
     @validator("enable_idempotence")
     def validate_idempotence_acks(cls, field_value, values):

@@ -5,13 +5,14 @@ Tests the Kafka Consumer configuration model
 """
 import pytest
 from typing import Dict, List
-from linuxforhealth.healthos.core.config import KafkaConsumerConfig
+from linuxforhealth.healthos.core.config.kafka import KafkaConsumerConfig
 from pydantic import ValidationError
 
 
 @pytest.fixture
 def config_data() -> Dict:
     return {
+        "type": "KafkaConsumer",
         "topics": ["my_topic", "my_other_topic"],
         "bootstrap_servers": "localhost:9092",
     }

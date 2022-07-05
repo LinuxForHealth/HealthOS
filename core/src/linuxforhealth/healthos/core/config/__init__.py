@@ -1,1 +1,1 @@
-from .kafka import KafkaConsumerConfig, KafkaProducerConfig
+from .connector import ConnectorConfig
