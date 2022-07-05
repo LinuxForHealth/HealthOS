@@ -6,6 +6,7 @@ class NatsClientConfig(BaseModel):
     """
     NATS Client (Core or Jetstream) configuration
     """
+
     type: Literal["NatsClient"]
 
     servers: str | List[str] = Field(
@@ -60,7 +61,8 @@ class NatsClientConfig(BaseModel):
     flusher_queue_size: int = Field(default=1024, ge=0)
     no_echo: bool = Field(
         default=False,
-        description="NoEcho configures whether the server will echo back messages that are sent on this connection if we also have matching subscriptions.",
+        description="NoEcho configures whether the server will echo back messages that are sent on this connection "
+        + "if we also have matching subscriptions.",
     )
     tls_hostname: Optional[str]
     user: Optional[str] = Field(
@@ -76,8 +78,8 @@ class NatsClientConfig(BaseModel):
         default=30, description="Set the timeout for draining a connection.", ge=0
     )
     user_credentials: Optional[Union[str, Tuple[str, str]]] = Field(
-        description="Convenience field which takes a filename for a user's JWT and a file name for the user's " +
-                    "private Nkey seed"
+        description="Convenience field which takes a filename for a user's JWT and a file name for the user's "
+        + "private Nkey seed"
     )
     nkeys_seed: Optional[str] = Field(description="Seed value used for NATS 2.0 Auth")
     inbox_prefix: Union[str, bytes] = Field(

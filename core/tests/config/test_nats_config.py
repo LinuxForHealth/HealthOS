@@ -50,7 +50,7 @@ def test_default_values(config_data):
         "flusher_queue_size",
         "drain_timeout",
         "pending_size",
-        "flush_timeout"
+        "flush_timeout",
     ],
 )
 def test_positive_numeric_fields(config_data: Dict, field_name: str):

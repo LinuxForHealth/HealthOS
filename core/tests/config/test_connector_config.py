@@ -60,11 +60,14 @@ def test_validate_connector_type_config():
         ConnectorConfig(**config_data)
 
 
-@pytest.mark.parametrize("config_file_name", [
-    "kafka-consumer-connector.yaml",
-    "kafka-producer-connector.yaml",
-    "nats-client-connector.yaml",
-])
+@pytest.mark.parametrize(
+    "config_file_name",
+    [
+        "kafka-consumer-connector.yaml",
+        "kafka-producer-connector.yaml",
+        "nats-client-connector.yaml",
+    ],
+)
 def test_load_connector_configuration(resources_path: str, config_file_name: str):
     """Loads a connector configuration from file"""
     file_path = os.path.join(resources_path, config_file_name)
