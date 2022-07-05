@@ -6,10 +6,12 @@ from pydantic import ValidationError
 
 @pytest.fixture
 def config_data() -> Dict:
+    """Returns the minimal config data for the NATS client"""
     return {"type": "NatsClient", "servers": ["nats://localhost:4222"]}
 
 
 def test_validate_minimum_input(config_data):
+    """Validates the minimum config fields for the NATS client"""
     config = NatsClientConfig(**config_data)
     assert config.servers == ["nats://localhost:4222"]
 
@@ -54,6 +56,7 @@ def test_default_values(config_data):
     ],
 )
 def test_positive_numeric_fields(config_data: Dict, field_name: str):
+    """Validates that each field listed via parameters supports values >= 0"""
     config_data[field_name] = -1
     with pytest.raises(ValidationError):
         NatsClientConfig(**config_data)

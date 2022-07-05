@@ -32,6 +32,38 @@ def test_validate_minimum_kafka_producer_input():
     ConnectorConfig(**config_data)
 
 
+def test_validate_minimum_nats_input():
+    """Validates the minimal configuration for a NATS connector"""
+    config_data = {
+        "type": "inbound",
+        "name": "NATS Client",
+        "config": {
+            "type": "NatsClient",
+            "servers": ["nats://localhost:4222"],
+        },
+    }
+    ConnectorConfig(**config_data)
+
+    config_data["type"] = "outbound"
+    ConnectorConfig(**config_data)
+
+
+def test_validate_minimum_rest_input():
+    """Validates the minimal configuration for a REST endpoint connector"""
+    config_data = {
+        "type": "inbound",
+        "name": "REST Endpoint",
+        "config": {
+            "type": "RestEndpoint",
+        },
+    }
+    ConnectorConfig(**config_data)
+
+    config_data["type"] = "outbound"
+    config_data["rest_host"] = "some-server"
+    ConnectorConfig(**config_data)
+
+
 def test_validate_connector_type_value():
     """Validates the connect.type field"""
     config_data = {

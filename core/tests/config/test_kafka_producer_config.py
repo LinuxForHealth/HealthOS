@@ -11,10 +11,12 @@ from pydantic import ValidationError
 
 @pytest.fixture
 def config_data() -> Dict:
+    """Fixture which returns the minimal KafkaProducer config data"""
     return {"type": "KafkaProducer", "bootstrap_servers": "localhost:9092"}
 
 
 def test_validate_minimum_input(config_data: Dict):
+    """Validates the minimum input config for a KafkaProducer"""
     config = KafkaProducerConfig(**config_data)
     assert config.bootstrap_servers == "localhost:9092"
 
@@ -110,6 +112,7 @@ def test_default_values(config_data):
     ],
 )
 def test_positive_numeric_fields(config_data: Dict, field_name: str):
+    """Validates that each field listed via parameters supports values >= 0"""
     config_data[field_name] = -1
     with pytest.raises(ValidationError):
         KafkaProducerConfig(**config_data)
