@@ -1,8 +1,8 @@
 import pytest
 from linuxforhealth.healthos.core.config.connector import (
     ConnectorConfig,
-    load_connector_configuration,
 )
+from linuxforhealth.healthos.core.config import load_core_configuration
 from pydantic import ValidationError
 import os
 
@@ -96,30 +96,3 @@ def test_validate_connector_type_config():
     }
     with pytest.raises(ValidationError):
         ConnectorConfig(**config_data)
-
-
-@pytest.mark.parametrize(
-    "config_file_name,expected_length",
-    [
-        ("kafka-consumer-connector.yaml", 1),
-        ("kafka-producer-connector.yaml", 1),
-        ("nats-client-connector.yaml", 1),
-        ("rest-endpoint-connector.yaml", 1),
-        ("inbound-connector.yaml", 2),
-    ],
-)
-def test_load_connector_configuration(resources_path: str,
-                                      config_file_name: str,
-                                      expected_length: int):
-    """Loads a connector configuration from file"""
-    file_path = os.path.join(resources_path, "connector-config", config_file_name)
-    config_data = load_connector_configuration(file_path)
-    assert isinstance(config_data, list)
-    assert len(config_data)
-
-
-def test_load_connector_configuration_invalid_path(resources_path: str):
-    """Validates that an exception is raised when a config file path is invalid"""
-    file_path = os.path.join(resources_path, "not-a-real-file.yaml")
-    with pytest.raises(FileNotFoundError):
-        load_connector_configuration(file_path)

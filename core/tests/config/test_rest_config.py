@@ -23,14 +23,17 @@ def test_validate_regexs_validation_error(field_name):
         RestEndpointConfig(**config_data)
 
 
-@pytest.mark.parametrize("field_name, field_value", [
-    ("http_method", "POST"),
-    ("http_method", "GET"),
-    ("http_method", "PUT"),
-    ("http_method", "DELETE"),
-    ("host_protocol", "http"),
-    ("host_protocol", "https"),
-])
+@pytest.mark.parametrize(
+    "field_name, field_value",
+    [
+        ("http_method", "POST"),
+        ("http_method", "GET"),
+        ("http_method", "PUT"),
+        ("http_method", "DELETE"),
+        ("host_protocol", "http"),
+        ("host_protocol", "https"),
+    ],
+)
 def test_validate_regexs(field_name, field_value):
     """Validates that regex backed fields do not raise a ValidationError for valid values"""
     config_data = {"type": "RestEndpoint", field_name: field_value}

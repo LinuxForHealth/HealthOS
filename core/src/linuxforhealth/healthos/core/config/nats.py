@@ -4,7 +4,13 @@ from typing import List, Optional, Union, Tuple, Literal
 
 class NatsClientConfig(BaseModel):
     """
-    NATS Client (Core or Jetstream) configuration
+    NATS Client (Core or Jetstream) configuration.
+
+    The fields within the configuration support the instantiation of the nats.py client, which is usd
+    for publishing and consuming messages.
+
+    Additional fields defined to streamline usage:
+    - subscriptions
     """
 
     type: Literal["NatsClient"]
@@ -52,7 +58,8 @@ class NatsClientConfig(BaseModel):
     max_outstanding_pings: int = Field(
         default=2,
         ge=0,
-        description="The maximum number of pending ping commands that can be awaiting a response before raising an ErrStaleConnection error.",
+        description="The maximum number of pending ping commands that can be awaiting a response before raising "
+        + "an ErrStaleConnection error.",
     )
     dont_randomize: bool = Field(
         default=False,
@@ -95,6 +102,9 @@ class NatsClientConfig(BaseModel):
         default=10.0,
         description="Allows a flush operation to have an associated timeout.",
         ge=0,
+    )
+    subjects: Optional[List[str]] = Field(
+        description="Optional list of subjects. This field is used by the core service to 'auto-subscribe' clients"
     )
 
     class Config:

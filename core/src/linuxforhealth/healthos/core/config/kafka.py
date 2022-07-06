@@ -11,6 +11,8 @@ from typing import List, Optional, Literal
 class KafkaConsumerConfig(BaseModel):
     """
     Kafka Consumer Configuration Settings
+
+    The fields within this configuration support the instantiation of the aiokafka KafkaConsumer class.
     """
 
     type: Literal["KafkaConsumer"]
@@ -150,7 +152,9 @@ class KafkaConsumerConfig(BaseModel):
 
 class KafkaProducerConfig(BaseModel):
     """
-    Kafka Producer Configuration Settings
+    Kafka Producer Configuration Settings.
+
+    The fields within this configuration support the instantiation of the aiokafka KafkaProducer class.
     """
 
     type: Literal["KafkaProducer"]

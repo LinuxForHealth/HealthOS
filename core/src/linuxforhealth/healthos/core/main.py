@@ -1,5 +1,5 @@
 import argparse
-from linuxforhealth.healthos.core.config import load_connector_configuration
+from linuxforhealth.healthos.core.config import load_core_configuration
 import pprint
 import os
 import sys
@@ -15,10 +15,14 @@ def parse_args(args):
     :param args: The arguments captured from sys.argv
     :return: parsed arguments
     """
-    parser = argparse.ArgumentParser(prog="LFH-HealthOS-Core",
-                                     description=CLI_DESCRIPTION,
-                                     formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("-f", "--file", help="The path to the connector configuration file.")
+    parser = argparse.ArgumentParser(
+        prog="LFH-HealthOS-Core",
+        description=CLI_DESCRIPTION,
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    parser.add_argument(
+        "-f", "--file", help="The path to the connector configuration file."
+    )
     return parser.parse_args(args)
 
 
@@ -33,7 +37,7 @@ def main():
     if not os.path.exists(args.file):
         raise FileNotFoundError(f"Unable to load configuration file {args.file}")
 
-    config = load_connector_configuration(args.file)
+    config = load_core_configuration(args.file)
     pprint.pprint(config.dict())
 
 

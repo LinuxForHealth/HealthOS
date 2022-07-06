@@ -1,9 +1,0 @@
-type: inbound
-id: Unit-Test-1
-name: Unit Test Kafka Consumer
-config:
-  type: KafkaConsumer
-  topics:
-    - my-topic
-    - my-other-topic
-  bootstrap_servers: localhost:9092
