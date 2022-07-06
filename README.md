@@ -41,3 +41,34 @@ Build targets will operate on all modules, by default. To override this behavior
 export TARGET_MODULES="support core"
 make dev_env
 ```
+
+## Common Development Environment
+[Poetry](https://python-poetry.org/) is used within each module to provide consistent dependency management, virtual
+environments, and access to CLI commands.
+
+### Dependency Management
+To add a dependency to a module, execute the following command:
+```shell
+poetry add <dependency name>
+```
+
+Dependencies are updated using poetry. The `--dry-run` switch may be used to view updates without making actual changes.
+```shell
+poetry update --dry-run
+```
+
+Executing updates:
+```shell
+# update all project dependencies
+poetry update
+# update specific dependency
+poetry update <dependency>
+```
+
+
+### Code Formatting
+The LinuxForHealth HealthOS code base uses the [black formatter](https://black.readthedocs.io/en/stable/).
+
+```shell
+poetry run black ./src ./tests
+```
