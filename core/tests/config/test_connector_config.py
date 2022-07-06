@@ -112,7 +112,7 @@ def test_load_connector_configuration(resources_path: str,
                                       config_file_name: str,
                                       expected_length: int):
     """Loads a connector configuration from file"""
-    file_path = os.path.join(resources_path, config_file_name)
+    file_path = os.path.join(resources_path, "connector-config", config_file_name)
     config_data = load_connector_configuration(file_path)
     assert isinstance(config_data, list)
     assert len(config_data)
