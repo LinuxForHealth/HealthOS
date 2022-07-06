@@ -1,4 +1,5 @@
 type: outbound
+id: Unit-Test-2
 name: Unit Test Kafka Producer
 config:
   type: KafkaProducer

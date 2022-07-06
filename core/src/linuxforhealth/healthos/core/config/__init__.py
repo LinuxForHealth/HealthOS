@@ -1,1 +1,1 @@
-from .connector import ConnectorConfig
+from .connector import ConnectorConfig, load_connector_configuration

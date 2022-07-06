@@ -1,4 +1,5 @@
 type: inbound
+id: Unit-Test-4
 name: Test REST endpoint
 config:
   type: RestEndpoint

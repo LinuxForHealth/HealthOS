@@ -1,14 +1,17 @@
-from pydantic import BaseModel, Field, root_validator
+from pydantic import BaseModel, Field, root_validator, parse_obj_as
 from .kafka import KafkaConsumerConfig, KafkaProducerConfig
 from .nats import NatsClientConfig
 from .rest import RestEndpointConfig
-from typing import Dict
+from typing import Dict, List
 import yaml
 
 
 class ConnectorConfig(BaseModel):
-    """maps connector type to compatible configs"""
+    """
+    Models a single connector configuration within a configuration file.
+    """
 
+    # maps connector type to compatible configs
     _connector_type_config = {
         "inbound": ("KafkaConsumer", "NatsClient", "RestEndpoint"),
         "outbound": ("KafkaProducer", "NatsClient", "RestEndpoint"),
@@ -18,6 +21,7 @@ class ConnectorConfig(BaseModel):
         + "transmitting (outbound) data",
         regex="^(inbound|outbound)$",
     )
+    id: str = Field(description="The connector id used to locate the service for admin operations")
     name: str = Field(description="The user defined connector name")
     config: KafkaProducerConfig | KafkaConsumerConfig | NatsClientConfig | RestEndpointConfig = Field(
         description="The connector configuration settings"
@@ -47,15 +51,18 @@ class ConnectorConfig(BaseModel):
         return values
 
 
-def load_connector_configuration(file_path: str) -> ConnectorConfig:
+def load_connector_configuration(file_path: str) -> List[ConnectorConfig]:
     """
     Loads connector configurations (YAML) from file
 
     :param file_path: The path to the YAML configuration
-    :return: ConnectorConfig model
+    :return: ConnectorConfigFile model
     """
     with open(file_path) as fp:
-        config_data = yaml.safe_load(fp)
+        connector_data = yaml.safe_load(fp)
 
-    config = ConnectorConfig(**config_data)
-    return config
+    if isinstance(connector_data, dict):
+        connector_data = [connector_data]
+
+    connector_configs: List[ConnectorConfig] = [ConnectorConfig(**c) for c in connector_data]
+    return connector_configs
