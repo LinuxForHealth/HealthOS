@@ -5,6 +5,8 @@ connectors:
     config:
       type: NatsClient
       servers: nats://localhost:4222
+      subjects:
+        -
   - type: inbound
     id: rest-connector
     name: Test REST endpoint
