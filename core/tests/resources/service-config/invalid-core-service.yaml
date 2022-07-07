@@ -1,4 +1,4 @@
-connectors:
+connectorzzzz:
   - type: inbound
     id: nats-connector
     name: Test NATS Client

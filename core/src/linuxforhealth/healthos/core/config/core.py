@@ -20,6 +20,7 @@ class CoreServiceConfig(BaseModel):
     # auditing:
     # data synchronization:
     # observability/metrics:
+    logging_config: str
 
     class Config:
         extra = "ignore"
