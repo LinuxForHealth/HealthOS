@@ -25,7 +25,7 @@ def _start_core_services(args):
         logging_config = yaml.load(f, Loader=yaml.FullLoader)
     logging.config.dictConfig(logging_config)
 
-    logger.info("Starting core services")
+    logger.info("Starting HealthOS Core service")
 
 
 def main(received_arguments: List[str] = None):
