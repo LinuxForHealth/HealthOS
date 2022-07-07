@@ -17,3 +17,5 @@ connectors:
       host_port: 8080
       relative_endpoint_url: /ingress
       http_method: POST
+
+logging_config: logging.yaml
