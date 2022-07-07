@@ -6,7 +6,7 @@ connectors:
       type: NatsClient
       servers: nats://localhost:4222
       subjects:
-        -
+        - hl7-messages
   - type: inbound
     id: rest-connector
     name: Test REST endpoint
