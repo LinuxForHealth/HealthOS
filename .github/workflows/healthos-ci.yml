@@ -34,4 +34,4 @@ jobs:
     - name: Execute Unit Tests
       run: |
         cd ${{ matrix.module-names }} && \
-          python -m pytest
+          python -m poetry run pytest
