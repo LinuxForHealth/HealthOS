@@ -1,3 +1,7 @@
+"""
+core.py
+The top level domain model for the Core service configuration.
+"""
 import yaml
 from pydantic import BaseModel
 

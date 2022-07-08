@@ -1,3 +1,10 @@
+"""
+main.py
+
+HealthOS Core Service CLI "entrypoint". The CLI supports the following subparsers:
+- core: starts the core service
+- admin: admin cli for core services
+"""
 import argparse
 from ..config import load_core_configuration, CoreServiceConfig
 from pydantic import ValidationError
@@ -8,7 +15,7 @@ import yaml
 import sys
 
 CLI_DESCRIPTION = """
-The LinuxForHealth HealthOS Core CLI starts Core OS services including:
+The LinuxForHealth HealthOS Core CLI manages Core OS services including:
 - connectors
 - data persistence
 - audit

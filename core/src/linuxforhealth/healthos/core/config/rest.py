@@ -1,10 +1,14 @@
+"""
+rest.py
+Pydantic models used to support REST endpoint connector configurations.
+"""
 from pydantic import BaseModel, Field
 from typing import Literal
 
 
 class RestEndpointConfig(BaseModel):
     """
-    Configures a REST endpoint used to receive inbound data
+    Configures a REST endpoint used to receive or transmit data
     """
 
     type: Literal["RestEndpoint"]

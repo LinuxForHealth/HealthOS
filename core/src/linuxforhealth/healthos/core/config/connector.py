@@ -1,3 +1,8 @@
+"""
+connector.py
+
+Pydantic domain models for Core Service connectors.
+"""
 from pydantic import BaseModel, Field, root_validator
 from .kafka import KafkaConsumerConfig, KafkaProducerConfig
 from .nats import NatsClientConfig
@@ -9,7 +14,6 @@ class ConnectorConfig(BaseModel):
     """
     Models a single connector configuration within a configuration file.
     """
-
     # maps connector type to compatible configs
     _connector_type_config = {
         "inbound": ("KafkaConsumer", "NatsClient", "RestEndpoint"),
