@@ -1,14 +1,19 @@
+"""
+main.py
+
+HealthOS Core Service CLI "entrypoint". The CLI supports the following subparsers:
+- core: starts the core service
+- admin: admin cli for core services
+"""
 import argparse
-from ..config import load_core_configuration, CoreServiceConfig
-from pydantic import ValidationError
 from typing import List
-import logging
 import logging.config
-import yaml
 import sys
+from .core import core_startup
+from .admin import admin_operation
 
 CLI_DESCRIPTION = """
-The LinuxForHealth HealthOS Core CLI starts Core OS services including:
+The LinuxForHealth HealthOS Core CLI manages Core OS services including:
 - connectors
 - data persistence
 - audit
@@ -16,43 +21,6 @@ The LinuxForHealth HealthOS Core CLI starts Core OS services including:
 """
 
 logger = logging.getLogger(__name__)
-
-
-def _start_core_services(args):
-    """
-    Starts the HealthOS core service using the service config.
-    Bootstrapping tasks include:
-    - loading and parsing the service configuration
-    - configuring logging
-
-    Exits and returns a 1 status code if the service config is not found or invalid
-
-    :param args: parsed CLI arguments
-    """
-
-    try:
-        # load service config
-        core_config: CoreServiceConfig = load_core_configuration(args.f)
-    except (FileNotFoundError, ValidationError) as e:
-        msg = f"Unable to start HealthOS Core Service\n An exception occurred {e}"
-        logger.error(msg)
-        sys.exit(1)
-    try:
-        # configure logging
-        with open(core_config.logging_config, "r") as f:
-            logging_config = yaml.load(f, Loader=yaml.FullLoader)
-            logging.config.dictConfig(logging_config)
-    except FileNotFoundError:
-        logger.warning(
-            f"Unable to load logging configuration from {core_config.logging_config}"
-        )
-        logger.warning("Falling back to basic config")
-        logging.basicConfig(
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s)",
-            level=logging.INFO,
-        )
-
-    logger.info("Starting HealthOS Core service")
 
 
 def main(received_arguments: List[str] = None):
@@ -85,7 +53,7 @@ def create_arg_parser():
         help="starts the LFH HealthOS Core Service using the core configuration file.",
     )
     core.add_argument("-f", help="The path to the core configuration file.")
-    core.set_defaults(func=_start_core_services)
+    core.set_defaults(func=core_startup)
 
     # admin
     admin = sub_parsers.add_parser(
@@ -95,6 +63,7 @@ def create_arg_parser():
     admin_operations.add_argument("-l", help="Lists core service tasks")
     admin_operations.add_argument("-r", help="Restarts a core service task")
     admin_operations.add_argument("-s", help="Stops a core service task")
+    admin_operations.set_defaults(func=admin_operation)
 
     return arg_parser
 

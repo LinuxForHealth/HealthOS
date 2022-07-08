@@ -1,7 +1,12 @@
+"""
+core.py
+The top level domain model for the Core service configuration.
+"""
 import yaml
 from pydantic import BaseModel
 
 from .connector import ConnectorConfig
+from .app import CoreApp
 from typing import List
 
 
@@ -16,6 +21,7 @@ class CoreServiceConfig(BaseModel):
     """
 
     connectors: List[ConnectorConfig]
+    app: CoreApp
     # TODO: implement support for
     # auditing:
     # data synchronization:

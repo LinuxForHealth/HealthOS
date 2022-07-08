@@ -1,8 +1,7 @@
 """
 kafka.py
 
-Pydantic models used to support external yaml configurations for Kafka Consumers and Producers.
-The Pydantic BaseModel is used rather than BaseSettings specifically to exclude environment overrides.
+Pydantic models used to support connector configurations for Kafka Consumers and Producers.
 """
 from pydantic import BaseModel, Field, root_validator, validator
 from typing import List, Optional, Literal

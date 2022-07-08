@@ -1,3 +1,8 @@
+"""
+connector.py
+
+Pydantic domain models for Core Service connectors.
+"""
 from pydantic import BaseModel, Field, root_validator
 from .kafka import KafkaConsumerConfig, KafkaProducerConfig
 from .nats import NatsClientConfig

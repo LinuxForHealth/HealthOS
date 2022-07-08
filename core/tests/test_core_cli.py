@@ -1,7 +1,9 @@
 import pytest
-from linuxforhealth.healthos.core.cli import main
+from linuxforhealth.healthos.core.cli.main import main
+from linuxforhealth.healthos.core.cli.core import uvicorn
 from contextlib import nullcontext as does_not_raise
 from tests.support import resources_directory
+from unittest.mock import patch
 
 
 @pytest.mark.parametrize(
@@ -38,6 +40,12 @@ from tests.support import resources_directory
     ],
 )
 def test_core_cli_system_exit(arguments, expectation):
-    """Validates that the core CLI returns a non-zero status code for exceptional situations"""
+    """
+    Validates that the core CLI returns a non-zero status code for exceptional situations.
+    Uvicorn is patched to ensure that the ASGI server does not start.
+    :param arguments: parameterized CLI arguments
+    :param expectation: used to parameterize if exceptions are raised, or if code executes successfully
+    """
     with expectation:
-        main.main(arguments)
+        with patch.object(uvicorn, "run", return_value=None):
+            main(arguments)
