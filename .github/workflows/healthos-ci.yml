@@ -25,13 +25,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip setuptools
         python -m pip install poetry==${{ matrix.poetry-version }}
-        cd ${{ matrix.module-names }}/src/linuxforhealth/healthos/${{ matrix.module-names }} && \
+        cd ${{ matrix.module-names }} && \
           python -m poetry install
     - name: Validate Formatting
       run: |
-        cd ${{ matrix.module-names }}/src/linuxforhealth/healthos/${{ matrix.module-names }} && \
+        cd ${{ matrix.module-names }} && \
           python -m poetry run black ./src ./tests
     - name: Execute Unit Tests
       run: |
-        cd ${{ matrix.module-names }}/src/linuxforhealth/healthos/${{ matrix.module-names }} && \
+        cd ${{ matrix.module-names } && \
           python -m pytest
