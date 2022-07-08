@@ -18,11 +18,11 @@ class CoreApp(BaseModel):
 
     port: int = Field(
         description="The port associated with the application's API server. Defaults to 8080.",
-        default=8080
+        default=8080,
     )
     host: str = Field(
         description="The host name or ip address bound to the server socket. Defaults to localhost.",
-        default="localhost"
+        default="localhost",
     )
     debug: bool = Field(
         description="When set to True, the server runs in debug mode supporting `hot reloads`. "
