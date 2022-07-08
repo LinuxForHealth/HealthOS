@@ -12,10 +12,7 @@ connectors:
     name: Test REST endpoint
     config:
       type: RestEndpoint
-      host_protocol: http
-      host_name: localhost
-      host_port: 8080
-      relative_endpoint_url: /ingress
+      url: /ingress
       http_method: POST
 
 logging_config: logging.yaml

@@ -8,14 +8,11 @@ def test_validate_minimum_input():
     config_data = {"type": "RestEndpoint"}
     config = RestEndpointConfig(**config_data)
 
-    assert config.relative_endpoint_url == "/ingress"
-    assert config.host_name == "localhost"
-    assert config.host_port == 5002
-    assert config.host_protocol == "http"
+    assert config.url == "/ingress"
     assert config.http_method == "POST"
 
 
-@pytest.mark.parametrize("field_name", ["http_method", "host_protocol"])
+@pytest.mark.parametrize("field_name", ["http_method"])
 def test_validate_regexs_validation_error(field_name):
     """Validates that ValidationErrors are raised if a regex backed field has an invalid value"""
     config_data = {"type": "RestEndpoint", field_name: "INVALID"}
@@ -27,11 +24,7 @@ def test_validate_regexs_validation_error(field_name):
     "field_name, field_value",
     [
         ("http_method", "POST"),
-        ("http_method", "GET"),
         ("http_method", "PUT"),
-        ("http_method", "DELETE"),
-        ("host_protocol", "http"),
-        ("host_protocol", "https"),
     ],
 )
 def test_validate_regexs(field_name, field_value):
