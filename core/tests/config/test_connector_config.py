@@ -2,9 +2,7 @@ import pytest
 from linuxforhealth.healthos.core.config.connector import (
     ConnectorConfig,
 )
-from linuxforhealth.healthos.core.config import load_core_configuration
 from pydantic import ValidationError
-import os
 
 
 def test_validate_minimum_kafka_consumer_input():
@@ -59,6 +57,8 @@ def test_validate_minimum_rest_input():
         "name": "REST Endpoint",
         "config": {
             "type": "RestEndpoint",
+            "url": "/ingress",
+            "http_method": "POST",
         },
     }
     ConnectorConfig(**config_data)

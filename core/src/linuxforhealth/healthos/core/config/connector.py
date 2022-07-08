@@ -14,6 +14,7 @@ class ConnectorConfig(BaseModel):
     """
     Models a single connector configuration within a configuration file.
     """
+
     # maps connector type to compatible configs
     _connector_type_config = {
         "inbound": ("KafkaConsumer", "NatsClient", "RestEndpoint"),

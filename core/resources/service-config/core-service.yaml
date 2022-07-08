@@ -17,5 +17,6 @@ connectors:
 app:
   port: 8080
   host: localhost
+  debug: False
 
 logging_config: logging.yaml

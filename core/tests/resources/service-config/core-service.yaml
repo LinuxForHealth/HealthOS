@@ -14,5 +14,8 @@ connectors:
       type: RestEndpoint
       url: /ingress
       http_method: POST
-
+app:
+  port: 8080
+  host: localhost
+  debug: False
 logging_config: logging.yaml
