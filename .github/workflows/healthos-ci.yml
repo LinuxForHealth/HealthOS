@@ -33,5 +33,5 @@ jobs:
           python -m poetry run black ./src ./tests
     - name: Execute Unit Tests
       run: |
-        cd ${{ matrix.module-names } && \
+        cd ${{ matrix.module-names }} && \
           python -m pytest
