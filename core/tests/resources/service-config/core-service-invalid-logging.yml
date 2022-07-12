@@ -18,4 +18,6 @@ app:
   port: 8080
   host: localhost
   debug: False
+  inbound_message_subject: ingress
+
 logging_config: not-a-valid-logging.yaml

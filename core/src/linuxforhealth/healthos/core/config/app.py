@@ -29,6 +29,10 @@ class CoreApp(BaseModel):
         + "Defaults to False.",
         default=False,
     )
+    inbound_message_subject: str = Field(
+        description="The Nats Subject used to receive all inbound messages",
+        default="ingress"
+    )
     ssl_keyfile: Optional[str] = Field(description="The path to a SSL key file.")
     ssl_keyfile_password: Optional[str] = Field(
         description="The password used to decrypt the SSL key."
