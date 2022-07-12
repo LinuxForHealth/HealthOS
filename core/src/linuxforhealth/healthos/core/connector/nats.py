@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 core_jetstream_client: JetStreamContext
 
 
-async def create_core_client(host: str, port: int, stream_name: str, subject: str):
+async def create_core_jetstream_client(host: str, port: int, stream_name: str, subject: str):
     """
     Creates a NATS client for the Core service.
     Additional operations include:

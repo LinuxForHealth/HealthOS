@@ -1,6 +1,7 @@
 """
 config.py
 The config module contains the Pydantic domain models used to support the core service configuration file.
+Package level imports are provided for convenience.
 """
 import yaml
 

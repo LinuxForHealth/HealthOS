@@ -20,8 +20,7 @@ from ..config import (
 )
 
 from .admin import router as admin_router
-from ..connector.rest import create_inbound_connector_route
-from ..connector.nats import create_core_client
+from ..connector import create_inbound_connector_route, create_core_jetstream_client
 from functools import partial
 
 logger = logging.getLogger(__name__)
@@ -71,7 +70,7 @@ def core_startup(args):
         core_service_app.add_event_handler("startup", startup_endpoints)
 
         startup_internal_nats = partial(
-            create_core_client,
+            create_core_jetstream_client,
             core_config.app.messaging.host,
             core_config.app.messaging.port,
             core_config.app.messaging.stream_name,
