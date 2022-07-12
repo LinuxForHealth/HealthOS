@@ -17,6 +17,7 @@ def config_data() -> Dict:
         "messaging": {
             "host": "0.0.0.0",
             "port": 4223,
+            "stream_name": "core",
             "inbound_subject": "landing_zone",
         },
     }
@@ -30,6 +31,7 @@ def test_validate_minimum_input(config_data: Dict):
     assert config.debug is True
     assert config.messaging.host == "0.0.0.0"
     assert config.messaging.port == 4223
+    assert config.messaging.stream_name == "core"
     assert config.messaging.inbound_subject == "landing_zone"
 
 
@@ -41,4 +43,5 @@ def test_defaults(config_data: Dict):
     assert config.debug is False
     assert config.messaging.host == "localhost"
     assert config.messaging.port == 4222
+    assert config.messaging.stream_name == "healthos"
     assert config.messaging.inbound_subject == "ingress"

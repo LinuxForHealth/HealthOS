@@ -20,8 +20,8 @@ def create_inbound_connector_route(url: str, http_method: str) -> APIRouter:
 
     async def execute_route():
         logger.debug("received inbound payload")
-        logger.debug("publishing to Nats")
-        logger.debug("received Nats Ack")
+        logger.debug("publishing to NATS")
+        logger.debug("received NATS Ack")
         return {"status": "ok"}
 
     router = APIRouter(prefix=url)

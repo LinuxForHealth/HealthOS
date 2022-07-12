@@ -22,6 +22,10 @@ class CoreAppMessaging(BaseModel):
         description="The messaging server's port. Defaults to 4222.",
         default=4222,
     )
+    stream_name: str = Field(
+        description="The messaging stream name. Defaults to healthos.",
+        default="healthos"
+    )
     inbound_subject: str = Field(
         description="The messaging subject used to receive all inbound/ingress messages",
         default="ingress",

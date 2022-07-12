@@ -1,9 +1,9 @@
 """
 nats.py
 
-Implements Nats connectors, or clients for ingress, core, and egress.
+Implements NATS connectors, or clients for ingress, core, and egress.
 The ingress client pulls data from external systems.
-The core client submits data to "internal" Nats subjects which power the HealthOS core pipeline.
+The core client submits data to "internal" NATS subjects which power the HealthOS core pipeline.
 The egress client transmits data to external systems.
 """
 import nats
@@ -17,12 +17,16 @@ logger = logging.getLogger(__name__)
 core_jetstream_client: JetStreamContext
 
 
-async def create_core_client(host: str, port: int, subject: str):
+async def create_core_client(host: str, port: int, stream_name: str, subject: str):
     """
-    Creates the core NATS client used to publish to core service subjects.
+    Creates a NATS client for the Core service.
+    Additional operations include:
+    - creating the target stream and subject if they do not exist
+    - associating the target subject with the NATS client instance
 
     :param host: The NATS server host name or ip address.
     :param port: The NATS server port number.
+    :param stream_name: The NATS server stream name
     :param subject: The NATS server subject which is published to
     :return:
     """
@@ -36,15 +40,15 @@ async def create_core_client(host: str, port: int, subject: str):
         logger.error(f"{ex}")
         raise
 
-    logger.info(f"Internal Nats Client Connected on {host}:{port}")
+    logger.info(f"Internal NATS Client Connected on {host}:{port}")
     jetstream_mgr: JetStreamManager = nats_connection.jsm()
 
     try:
-        await jetstream_mgr.stream_info("healthos")
+        await jetstream_mgr.stream_info(stream_name)
     except NotFoundError:
-        logger.info("HealthOS Stream Not Found Within Nats Jetstream Server")
+        logger.info("HealthOS Stream Not Found Within NATS Jetstream Server")
         logger.info("Creating HealthOS Stream")
-        await jetstream_mgr.add_stream(name="healthos", subjects=["ingress"])
+        await jetstream_mgr.add_stream(name="healthos", subjects=[subject])
 
     global core_jetstream_client
     core_jetstream_client = nats_connection.jetstream()

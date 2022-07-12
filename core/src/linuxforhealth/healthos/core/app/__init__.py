@@ -69,8 +69,12 @@ def core_startup(args):
         core_service_app.add_event_handler("startup", startup_endpoints)
 
         startup_internal_nats = partial(
-            create_core_client, "localhost", 4222, "ingress"
-        )
+            create_core_client,
+            core_config.app.messaging.host,
+            core_config.app.messaging.port,
+            core_config.app.messaging.stream_name,
+            core_config.app.messaging.inbound_subject)
+
         core_service_app.add_event_handler("startup", startup_internal_nats)
 
         uvicorn_params = {
