@@ -2,7 +2,6 @@
 core.py
 The top level domain model for the Core service configuration.
 """
-import yaml
 from pydantic import BaseModel
 
 from .connector import ConnectorConfig
@@ -36,17 +35,3 @@ class CoreServiceConfig(BaseModel):
     def inbound_connectors(self) -> List[ConnectorConfig]:
         """Returns inbound connectors"""
         return [c for c in self.connectors if c.type == "inbound"]
-
-
-def load_core_configuration(file_path: str) -> CoreServiceConfig:
-    """
-    Loads the core service configurations (YAML) from file
-
-    :param file_path: The path to the YAML configuration
-    :return: CoreServiceConfig model
-    """
-    with open(file_path) as fp:
-        core_data = yaml.safe_load(fp)
-
-    core_config = CoreServiceConfig(**core_data)
-    return core_config

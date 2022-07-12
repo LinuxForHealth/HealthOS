@@ -24,7 +24,7 @@ class CoreAppMessaging(BaseModel):
     )
     stream_name: str = Field(
         description="The messaging stream name. Defaults to healthos.",
-        default="healthos"
+        default="healthos",
     )
     inbound_subject: str = Field(
         description="The messaging subject used to receive all inbound/ingress messages",

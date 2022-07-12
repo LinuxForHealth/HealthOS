@@ -16,6 +16,7 @@ from ..config import (
     CoreServiceConfig,
     ConnectorConfig,
     load_core_configuration,
+    get_core_configuration,
 )
 
 from .admin import router as admin_router
@@ -51,7 +52,8 @@ def core_startup(args):
 
     try:
         # load service config
-        core_config: CoreServiceConfig = load_core_configuration(args.f)
+        load_core_configuration(args.f)
+        core_config: CoreServiceConfig = get_core_configuration()
     except (FileNotFoundError, ValidationError) as e:
         msg = f"Unable to start HealthOS Core Service\n An exception occurred {e}"
         logger.error(msg)
@@ -73,7 +75,8 @@ def core_startup(args):
             core_config.app.messaging.host,
             core_config.app.messaging.port,
             core_config.app.messaging.stream_name,
-            core_config.app.messaging.inbound_subject)
+            core_config.app.messaging.inbound_subject,
+        )
 
         core_service_app.add_event_handler("startup", startup_internal_nats)
 

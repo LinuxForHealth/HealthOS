@@ -15,5 +15,7 @@ root:
 loggers:
   linuxforhealth.healthos.core:
     level: INFO
+  linuxforhealth.healthos.core.connector:
+    level: DEBUG
   uvicorn:
     level: INFO

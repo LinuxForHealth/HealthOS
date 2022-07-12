@@ -30,8 +30,8 @@ async def create_core_client(host: str, port: int, stream_name: str, subject: st
     :param subject: The NATS server subject which is published to
     :return:
     """
-    nats_connection = None
-    jetstream_mgr = None
+    nats_connection: nats.NATS
+    jetstream_mgr: JetStreamManager
 
     try:
         nats_connection = await nats.connect(f"nats://{host}:{port}")
@@ -52,3 +52,8 @@ async def create_core_client(host: str, port: int, stream_name: str, subject: st
 
     global core_jetstream_client
     core_jetstream_client = nats_connection.jetstream()
+
+
+def get_core_jetstream_client() -> JetStreamContext:
+    """Returns the NATS jetstream client used for core messaging"""
+    return core_jetstream_client
