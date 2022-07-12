@@ -9,14 +9,13 @@ connectors:
         - hl7-messages
   - type: inbound
     id: rest-connector
-    name: Test REST endpoint
+    name: Test REST endpointe
     config:
       type: RestEndpoint
       url: /ingress
-      http_method: POST
+      http_method: post
 app:
   port: 8080
   host: localhost
   debug: False
-
-logging_config: logging.yaml
+logging_config: not-a-valid-logging.yaml

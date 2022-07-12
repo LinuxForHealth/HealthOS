@@ -58,7 +58,7 @@ def test_validate_minimum_rest_input():
         "config": {
             "type": "RestEndpoint",
             "url": "/ingress",
-            "http_method": "POST",
+            "http_method": "post",
         },
     }
     ConnectorConfig(**config_data)

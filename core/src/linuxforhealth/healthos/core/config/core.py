@@ -22,15 +22,20 @@ class CoreServiceConfig(BaseModel):
 
     connectors: List[ConnectorConfig]
     app: CoreApp
-    # TODO: implement support for
-    # auditing:
-    # data synchronization:
-    # observability/metrics:
+    # TODO: implement support for:
+    # - auditing
+    # - data synchronization
+    # - observability/metrics
     logging_config: str
 
     class Config:
         extra = "ignore"
         frozen = True
+
+    @property
+    def inbound_connectors(self) -> List[ConnectorConfig]:
+        """Returns inbound connectors"""
+        return [c for c in self.connectors if c.type == "inbound"]
 
 
 def load_core_configuration(file_path: str) -> CoreServiceConfig:

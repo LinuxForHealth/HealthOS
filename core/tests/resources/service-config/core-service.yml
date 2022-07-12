@@ -13,7 +13,7 @@ connectors:
     config:
       type: RestEndpoint
       url: /ingress
-      http_method: POST
+      http_method: post
 app:
   port: 8080
   host: localhost

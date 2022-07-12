@@ -9,7 +9,7 @@ def config_data() -> Dict:
     return {
         "type": "RestEndpoint",
         "url": "/ingress",
-        "http_method": "POST",
+        "http_method": "post",
     }
 
 
@@ -17,7 +17,7 @@ def test_validate_minimum_input(config_data):
     """Validates the minimal config data required for a REST endpoint configuration"""
     config = RestEndpointConfig(**config_data)
     assert config.url == "/ingress"
-    assert config.http_method == "POST"
+    assert config.http_method == "post"
 
 
 @pytest.mark.parametrize("field_name", ["http_method"])
@@ -31,8 +31,8 @@ def test_validate_regexs_validation_error(config_data, field_name):
 @pytest.mark.parametrize(
     "field_name, field_value",
     [
-        ("http_method", "POST"),
-        ("http_method", "PUT"),
+        ("http_method", "post"),
+        ("http_method", "put"),
     ],
 )
 def test_validate_regexs(config_data, field_name, field_value):

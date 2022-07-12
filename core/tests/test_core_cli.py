@@ -1,6 +1,6 @@
 import pytest
-from linuxforhealth.healthos.core.cli.main import main
-from linuxforhealth.healthos.core.cli.core import uvicorn
+from linuxforhealth.healthos.core.cli import main
+from linuxforhealth.healthos.core.app import uvicorn
 from contextlib import nullcontext as does_not_raise
 from tests.support import resources_directory
 from unittest.mock import patch
@@ -11,7 +11,7 @@ from unittest.mock import patch
     [
         # invalid path results in a SystemExit
         (
-            ["core", "-f", "/invalid/path/core-service.yaml"],
+            ["core", "-f", "/invalid/path/core-service.yml"],
             pytest.raises(SystemExit),
         ),
         # invalid service configuration data results in a SystemExit
@@ -19,13 +19,13 @@ from unittest.mock import patch
             [
                 "core",
                 "-f",
-                f"{resources_directory}/service-config/invalid-core-service.yaml",
+                f"{resources_directory}/service-config/invalid-core-service.yml",
             ],
             pytest.raises(SystemExit),
         ),
         # valid file
         (
-            ["core", "-f", f"{resources_directory}/service-config/core-service.yaml"],
+            ["core", "-f", f"{resources_directory}/service-config/core-service.yml"],
             does_not_raise(),
         ),
         # invalid path to a logging config falls back to basic config, doesn't exit
@@ -33,7 +33,7 @@ from unittest.mock import patch
             [
                 "core",
                 "-f",
-                f"{resources_directory}/service-config/core-service-invalid-logging.yaml",
+                f"{resources_directory}/service-config/core-service-invalid-logging.yml",
             ],
             does_not_raise(),
         ),
