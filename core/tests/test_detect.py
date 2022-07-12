@@ -11,7 +11,7 @@ from linuxforhealth.healthos.core.detect import (
 
 
 @pytest.fixture
-def sample_data_path(resources_path):
+def sample_data_path(resources_path) -> str:
     return os.path.join(resources_path, "sample-data")
 
 
@@ -23,7 +23,7 @@ def sample_data_path(resources_path):
         ("fhir-us-core-patient.json", ContentType.FHIR_JSON),
     ],
 )
-def test_detect_content_type(sample_data_path, file_name, content_type):
+def test_detect_content_type(sample_data_path: str, file_name: str, content_type: ContentType):
     """
     Validates detect_content_type when no errors occur.
 
@@ -39,7 +39,7 @@ def test_detect_content_type(sample_data_path, file_name, content_type):
     assert content_type == actual_content_type
 
 
-def test_detect_content_type_exception(sample_data_path):
+def test_detect_content_type_exception(sample_data_path: str):
     """
     Validates detect_content_type raises an exception when appropriate.
     :param sample_data_path: The sample data path
@@ -60,7 +60,7 @@ def test_detect_content_type_exception(sample_data_path):
         ("fhir-us-core-patient.json", ContentType.FHIR_JSON),
     ],
 )
-def test_validate_message(sample_data_path, file_name, content_type):
+def test_validate_message(sample_data_path: str, file_name: str, content_type: ContentType):
     """
     Validates that validate_message does not raise an exception for valid input messages.
 
@@ -76,7 +76,7 @@ def test_validate_message(sample_data_path, file_name, content_type):
     assert content_type == actual_content_type
 
 
-def test_validate_message_exception(sample_data_path):
+def test_validate_message_exception(sample_data_path: str):
     """
     Validates validate_message raises an exception when appropriate.
     :param sample_data_path: The sample data path

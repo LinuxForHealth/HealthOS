@@ -15,7 +15,7 @@ def config_data() -> Dict:
     return {"type": "NatsClient", "servers": ["nats://localhost:4222"]}
 
 
-def test_validate_minimum_input(config_data):
+def test_validate_minimum_input(config_data: Dict):
     """Validates the minimum config fields for the NATS client"""
     config = NatsClientConfig(**config_data)
     assert config.servers == ["nats://localhost:4222"]
@@ -26,7 +26,7 @@ def test_validate_minimum_input(config_data):
     assert config.servers == ["nats://localhost:4222"]
 
 
-def test_default_values(config_data):
+def test_default_values(config_data: Dict):
     """Validates that fields have expected default values"""
     config = NatsClientConfig(**config_data)
     assert config.pedantic is False

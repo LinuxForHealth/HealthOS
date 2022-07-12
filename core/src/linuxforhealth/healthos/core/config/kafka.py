@@ -4,7 +4,7 @@ kafka.py
 Pydantic models used to support connector configurations for Kafka Consumers and Producers.
 """
 from pydantic import BaseModel, Field, root_validator, validator
-from typing import List, Optional, Literal
+from typing import List, Optional, Literal, Dict, Any
 
 
 class KafkaConsumerConfig(BaseModel):
@@ -227,7 +227,7 @@ class KafkaProducerConfig(BaseModel):
     )
 
     @root_validator(pre=True)
-    def default_acks(cls, values):
+    def default_acks(cls, values: Dict) -> Dict:
         """Defaults acks to "all" if enable_idempotence is True and acks is not set"""
         acks_value = values.get("acks")
         enable_idempotence = values.get("enable_idempotence")
@@ -242,7 +242,7 @@ class KafkaProducerConfig(BaseModel):
         frozen = True
 
     @validator("enable_idempotence")
-    def validate_idempotence_acks(cls, field_value, values):
+    def validate_idempotence_acks(cls, field_value: Any, values: Dict) -> Dict:
         """
         Validates that acks and enable_idempotence have compatible settings
         :param field_value: The enable_idempotence field value
