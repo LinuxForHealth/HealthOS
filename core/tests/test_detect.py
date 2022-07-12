@@ -23,7 +23,9 @@ def sample_data_path(resources_path) -> str:
         ("fhir-us-core-patient.json", ContentType.FHIR_JSON),
     ],
 )
-def test_detect_content_type(sample_data_path: str, file_name: str, content_type: ContentType):
+def test_detect_content_type(
+    sample_data_path: str, file_name: str, content_type: ContentType
+):
     """
     Validates detect_content_type when no errors occur.
 
@@ -60,7 +62,9 @@ def test_detect_content_type_exception(sample_data_path: str):
         ("fhir-us-core-patient.json", ContentType.FHIR_JSON),
     ],
 )
-def test_validate_message(sample_data_path: str, file_name: str, content_type: ContentType):
+def test_validate_message(
+    sample_data_path: str, file_name: str, content_type: ContentType
+):
     """
     Validates that validate_message does not raise an exception for valid input messages.
 

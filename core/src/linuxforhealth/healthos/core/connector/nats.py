@@ -26,15 +26,10 @@ class PublishDataModel(BaseModel):
     """
 
     data_id: uuid.UUID = Field(
-        description="The unique id for the data message",
-        default=uuid.uuid4()
+        description="The unique id for the data message", default=uuid.uuid4()
     )
-    data: str = Field(
-        description="The data payload"
-    )
-    content_type: ContentType = Field(
-        description="The data content-type"
-    )
+    data: str = Field(description="The data payload")
+    content_type: ContentType = Field(description="The data content-type")
 
 
 async def create_core_jetstream_client(
