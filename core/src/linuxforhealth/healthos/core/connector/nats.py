@@ -10,6 +10,9 @@ import nats
 from nats.js import JetStreamManager, JetStreamContext
 import logging
 from nats.js.errors import NotFoundError
+from pydantic import BaseModel, Field
+import uuid
+from ..detect import ContentType
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +20,26 @@ logger = logging.getLogger(__name__)
 core_jetstream_client: JetStreamContext
 
 
-async def create_core_jetstream_client(host: str, port: int, stream_name: str, subject: str):
+class PublishDataModel(BaseModel):
+    """
+    Model used to publish data to NATS Jetstream
+    """
+
+    data_id: uuid.UUID = Field(
+        description="The unique id for the data message",
+        default=uuid.uuid4()
+    )
+    data: str = Field(
+        description="The data payload"
+    )
+    content_type: ContentType = Field(
+        description="The data content-type"
+    )
+
+
+async def create_core_jetstream_client(
+    host: str, port: int, stream_name: str, subject: str
+):
     """
     Creates a NATS client for the Core service.
     Additional operations include:
