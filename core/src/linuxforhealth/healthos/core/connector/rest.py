@@ -4,6 +4,9 @@ rest.py
 Implements Rest API connectors
 """
 from fastapi.routing import APIRouter
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def create_inbound_connector_route(url: str, http_method: str) -> APIRouter:
@@ -16,6 +19,9 @@ def create_inbound_connector_route(url: str, http_method: str) -> APIRouter:
     """
 
     async def execute_route():
+        logger.debug("received inbound payload")
+        logger.debug("publishing to Nats")
+        logger.debug("received Nats Ack")
         return {"status": "ok"}
 
     router = APIRouter(prefix=url)

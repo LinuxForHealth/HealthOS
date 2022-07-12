@@ -57,6 +57,7 @@ def core_startup(args):
         logger.error(msg)
         sys.exit(1)
     else:
+        # use partial functions to align with the Fast API/starlette "no-arg" event handler functions
         startup_logging = partial(configure_logging, core_config.logging_config)
         core_service_app.add_event_handler("startup", startup_logging)
 
@@ -98,7 +99,7 @@ def configure_logging(file_path: str):
         logger.warning(f"Unable to load logging configuration from {file_path}")
         logger.warning("Falling back to basic config")
         logging.basicConfig(
-            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s)",
+            format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             level=logging.INFO,
         )
 

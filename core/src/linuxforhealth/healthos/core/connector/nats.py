@@ -41,7 +41,7 @@ async def create_core_client(host: str, port: int, subject: str):
 
     try:
         await jetstream_mgr.stream_info("healthos")
-    except NotFoundError as ex:
+    except NotFoundError:
         logger.info("HealthOS Stream Not Found Within Nats Jetstream Server")
         logger.info("Creating HealthOS Stream")
         await jetstream_mgr.add_stream(name="healthos", subjects=["ingress"])

@@ -18,6 +18,9 @@ app:
   port: 8080
   host: localhost
   debug: False
-  inbound_message_subject: ingress
+  messaging:
+    host: localhost
+    port: 4222
+    inbound_subject: ingress
 
 logging_config: not-a-valid-logging.yaml
