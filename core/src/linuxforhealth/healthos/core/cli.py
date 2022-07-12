@@ -1,5 +1,5 @@
 """
-main.py
+cli.py
 
 HealthOS Core Service CLI "entrypoint". The CLI supports the following subparsers:
 - core: starts the core service
@@ -9,8 +9,7 @@ import argparse
 from typing import List
 import logging.config
 import sys
-from .core import core_startup
-from .admin import admin_operation
+from linuxforhealth.healthos.core.app import core_startup
 
 CLI_DESCRIPTION = """
 The LinuxForHealth HealthOS Core CLI manages Core OS services including:
@@ -25,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 def main(received_arguments: List[str] = None):
     """
-    Executes the CLI utilities
+    Executes the CLI programs.
     :param received_arguments: The arguments from the CLI. Defaults to None
     """
     parser = create_arg_parser()
@@ -39,6 +38,9 @@ def main(received_arguments: List[str] = None):
 
 
 def create_arg_parser():
+    """
+    Creates the CLI argument parser for the HealthOS core and admin programs.
+    """
     arg_parser = argparse.ArgumentParser(
         prog="LFH HealthOS Core",
         description=CLI_DESCRIPTION,
@@ -63,7 +65,7 @@ def create_arg_parser():
     admin_operations.add_argument("-l", help="Lists core service tasks")
     admin_operations.add_argument("-r", help="Restarts a core service task")
     admin_operations.add_argument("-s", help="Stops a core service task")
-    admin_operations.set_defaults(func=admin_operation)
+    # admin_operations.set_defaults(func=admin_operation)
 
     return arg_parser
 

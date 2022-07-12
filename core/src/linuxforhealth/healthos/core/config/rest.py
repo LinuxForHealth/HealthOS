@@ -16,4 +16,4 @@ class RestEndpointConfig(BaseModel):
         description="Defines the endpoint used to receive inbound data via "
         + "a HTTP POST or PUT",
     )
-    http_method: str = Field(regex="^(POST|PUT)$", default="POST")
+    http_method: str = Field(regex="^(post|put)$", default="post")

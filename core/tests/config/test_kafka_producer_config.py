@@ -82,7 +82,7 @@ def test_validate_idempotence_error(config_data: Dict):
         KafkaProducerConfig(**config_data)
 
 
-def test_default_values(config_data):
+def test_default_values(config_data: Dict):
     """Validates that fields have expected default values"""
     config = KafkaProducerConfig(**config_data)
     assert config.acks == 1

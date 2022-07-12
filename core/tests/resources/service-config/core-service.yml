@@ -13,9 +13,15 @@ connectors:
     config:
       type: RestEndpoint
       url: /ingress
-      http_method: POST
+      http_method: post
 app:
   port: 8080
   host: localhost
   debug: False
+  messaging:
+    host: localhost
+    port: 4222
+    stream_name: healthos
+    inbound_subject: ingress
+
 logging_config: logging.yaml

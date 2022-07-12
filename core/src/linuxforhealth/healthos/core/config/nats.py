@@ -1,6 +1,6 @@
 """
 nats.py
-Pydantic models used to support connector configurations for the Nats Client.
+Pydantic models used to support connector configurations for the NATS Client.
 """
 from pydantic import BaseModel, Field
 from typing import List, Optional, Union, Tuple, Literal

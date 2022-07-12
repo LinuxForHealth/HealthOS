@@ -1,3 +1,8 @@
+"""
+test_connector_config.py
+
+Test cases for the Connector configuration model.
+"""
 import pytest
 from linuxforhealth.healthos.core.config.connector import (
     ConnectorConfig,
@@ -58,7 +63,7 @@ def test_validate_minimum_rest_input():
         "config": {
             "type": "RestEndpoint",
             "url": "/ingress",
-            "http_method": "POST",
+            "http_method": "post",
         },
     }
     ConnectorConfig(**config_data)

@@ -9,20 +9,44 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 
+class CoreAppMessaging(BaseModel):
+    """
+    The configuration settings for the Core service application's messaging component.
+    """
+
+    host: str = Field(
+        description="The host name or ip address for the messaging server. Defaults to localhost.",
+        default="localhost",
+    )
+    port: int = Field(
+        description="The messaging server's port. Defaults to 4222.",
+        default=4222,
+    )
+    stream_name: str = Field(
+        description="The messaging stream name. Defaults to healthos.",
+        default="healthos",
+    )
+    inbound_subject: str = Field(
+        description="The messaging subject used to receive all inbound/ingress messages",
+        default="ingress",
+    )
+
+
 class CoreApp(BaseModel):
     """
     The configuration settings for the Core service application.
-    The Core service application supports the Admin API interface and the optional REST endpoint connector.
-    These settings map to the underlying uvicorn app used to support the Core service's Fast API application.
+
+    The Core service application supports the Admin API interface, optional REST connectors, and provides the
+    event loop for all Core service tasks.
     """
 
-    port: int = Field(
-        description="The port associated with the application's API server. Defaults to 8080.",
-        default=8080,
-    )
     host: str = Field(
         description="The host name or ip address bound to the server socket. Defaults to localhost.",
         default="localhost",
+    )
+    port: int = Field(
+        description="The port associated with the application's API server. Defaults to 8080.",
+        default=8080,
     )
     debug: bool = Field(
         description="When set to True, the server runs in debug mode supporting `hot reloads`. "
@@ -40,3 +64,8 @@ class CoreApp(BaseModel):
     )
     ssl_ca_certs: Optional[str] = Field(description="The CA certificates file.")
     ssl_ciphers: Optional[str] = Field(description="The SSL ciphers to use.")
+    messaging: CoreAppMessaging = Field(
+        description="Configuration for the application's internal messaging "
+        + "system",
+        default=CoreAppMessaging(),
+    )

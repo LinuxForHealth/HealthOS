@@ -1,5 +1,5 @@
 version: 1
-disable_existing_loggers: false
+disable_existing_loggers: true
 formatters:
   simple:
     format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -14,6 +14,6 @@ root:
   handlers: [console]
 loggers:
   linuxforhealth.healthos.core:
-    level: INFO
+    level: DEBUG
   uvicorn:
     level: INFO
