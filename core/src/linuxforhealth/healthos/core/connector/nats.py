@@ -14,6 +14,7 @@ from pydantic import BaseModel, Field
 import uuid
 from ..detect import ContentType
 from typing import List
+from ..config import CoreServiceConfig, get_core_configuration
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +67,7 @@ async def create_jetstream_core_client(url: str, stream_name: str, subject: str)
     except NotFoundError:
         logger.info("HealthOS Stream Not Found Within NATS Jetstream Server")
         logger.info("Creating HealthOS Stream")
-        await jetstream_mgr.add_stream(name="healthos", subjects=[subject])
+        await jetstream_mgr.add_stream(name=stream_name, subjects=[subject])
 
     global jetstream_core_client
     jetstream_core_client = nats_connection.jetstream()
@@ -94,7 +95,7 @@ async def create_jetstream_client(urls: List[str], subjects: List[str]):
     global jetstream_client
     jetstream_client = nats_connection.jetstream()
     for s in subjects:
-        await jetstream_client.subscribe(s)
+        await jetstream_client.subscribe(s, cb=inbound_connector_callback)
         logger.info(f"Subscribed to subject {s}")
 
 
@@ -106,3 +107,24 @@ def get_jetstream_core_client() -> JetStreamContext:
 def get_jetstream_client() -> JetStreamContext:
     """Returns the NATS jetstream client used for external messaging"""
     return jetstream_client
+
+
+async def inbound_connector_callback(msg):
+    """
+    This callback function is used to consolidate inbound message processing.
+    Messages received are published to the core service's internal messaging system
+
+    :param msg: The message from the internal system
+    """
+    await msg.ack()
+
+    service_config: CoreServiceConfig = get_core_configuration()
+    core_client: JetStreamContext = get_jetstream_core_client()
+
+    ack = await core_client.publish(
+        service_config.app.messaging.inbound_subject, msg.data
+    )
+    logger.debug(
+        f"published message to {service_config.app.messaging.inbound_subject}, received ack {ack}"
+    )
+
