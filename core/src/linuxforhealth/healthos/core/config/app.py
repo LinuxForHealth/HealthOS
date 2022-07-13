@@ -14,13 +14,9 @@ class CoreAppMessaging(BaseModel):
     The configuration settings for the Core service application's messaging component.
     """
 
-    host: str = Field(
-        description="The host name or ip address for the messaging server. Defaults to localhost.",
-        default="localhost",
-    )
-    port: int = Field(
-        description="The messaging server's port. Defaults to 4222.",
-        default=4222,
+    url: str = Field(
+        description="The URL for the core application messaging service (NATS Jetstream).",
+        default="nats://localhost:4222",
     )
     stream_name: str = Field(
         description="The messaging stream name. Defaults to healthos.",

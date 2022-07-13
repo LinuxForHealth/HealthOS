@@ -7,7 +7,7 @@ from fastapi.routing import APIRouter
 from fastapi import Depends, HTTPException
 import logging
 from ..config import get_core_configuration
-from ..connector import get_core_jetstream_client, PublishDataModel
+from ..connector import get_jetstream_core_client, PublishDataModel
 from pydantic import BaseModel, Field
 from ..detect import validate_message
 from nats.js.errors import NoStreamResponseError
@@ -36,7 +36,7 @@ class RestEndpointRequest(BaseModel):
 async def endpoint_template(
     request_model: RestEndpointRequest,
     core_config=Depends(get_core_configuration),
-    jetstream_client=Depends(get_core_jetstream_client),
+    jetstream_client=Depends(get_jetstream_core_client),
 ):
     """
     Provides an asyncio based template for core connector RestEndpoint implementations.
@@ -53,7 +53,7 @@ async def endpoint_template(
     :return: a 200 status code with a response payload containing the request status and id
     """
     data_id = str(uuid.uuid4())
-    logger.debug("Generated {data_id} for incoming payload")
+    logger.debug(f"Generated {data_id} for incoming payload")
 
     try:
         content_type = validate_message(request_model.data)
@@ -84,6 +84,7 @@ async def endpoint_template(
             f"publishing to NATS {messaging_config.stream_name}:{messaging_config.inbound_subject}"
         )
         logger.debug(f"received NATS Ack {publish_ack}")
+        logger.debug(f"returning status = received, id = {data_id}")
         return {"status": "received", "id": data_id}
 
 

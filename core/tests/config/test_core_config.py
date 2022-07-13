@@ -4,11 +4,13 @@ test_core_config.py
 Test cases for the top level "core" service model.
 """
 import pytest
+from typing import List
 import os
 from linuxforhealth.healthos.core.config import (
     load_core_configuration,
     get_core_configuration,
     CoreServiceConfig,
+    ConnectorConfig,
 )
 
 
@@ -20,7 +22,7 @@ def core_configuration(resources_path) -> CoreServiceConfig:
     return get_core_configuration()
 
 
-def test_core_service_inbound_connectors_prop(core_configuration: CoreServiceConfig):
+def test_inbound_connectors_prop(core_configuration: CoreServiceConfig):
     """
     Validates the inbound_connectors property.
 
@@ -28,6 +30,40 @@ def test_core_service_inbound_connectors_prop(core_configuration: CoreServiceCon
     """
     connector_types = {c.type for c in core_configuration.inbound_connectors}
     assert connector_types == {"inbound"}
+
+
+def test_inbound_nats_connectors_property(core_configuration: CoreServiceConfig):
+    """
+    Validates the inbound_nats_connectors property.
+
+    :param core_configuration: The core service configuration model
+    """
+    nats_connectors: List[ConnectorConfig] = core_configuration.inbound_nats_connectors
+    assert len(nats_connectors) == 1
+    assert nats_connectors[0].config.type == "NatsClient"
+
+
+def test_inbound_rest_connectors_property(core_configuration: CoreServiceConfig):
+    """
+    Validates the inbound_rest_connectors property.
+
+    :param core_configuration: The core service configuration model
+    """
+    rest_connectors: List[ConnectorConfig] = core_configuration.inbound_rest_connectors
+    assert len(rest_connectors) == 1
+    assert rest_connectors[0].config.type == "RestEndpoint"
+
+
+def test_inbound_kafka_connectors_property(core_configuration: CoreServiceConfig):
+    """
+    Validates the inbound_kafka_connectors property.
+
+    :param core_configuration: The core service configuration model
+    """
+    kafka_connectors: List[
+        ConnectorConfig
+    ] = core_configuration.inbound_kafka_connectors
+    assert len(kafka_connectors) == 0
 
 
 def test_load_core_service_configuration(core_configuration: CoreServiceConfig):
