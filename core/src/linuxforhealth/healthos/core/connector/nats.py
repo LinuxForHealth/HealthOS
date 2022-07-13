@@ -16,8 +16,11 @@ from ..detect import ContentType
 
 logger = logging.getLogger(__name__)
 
+# client used for core messaging
+jetstream_core_client: JetStreamContext
 
-core_jetstream_client: JetStreamContext
+# client used for messaging with external systems
+jetstream_client: JetStreamContext
 
 
 class PublishDataModel(BaseModel):
@@ -32,7 +35,7 @@ class PublishDataModel(BaseModel):
     content_type: ContentType = Field(description="The data content-type")
 
 
-async def create_core_jetstream_client(
+async def create_jetstream_core_client(
     host: str, port: int, stream_name: str, subject: str
 ):
     """
@@ -67,10 +70,15 @@ async def create_core_jetstream_client(
         logger.info("Creating HealthOS Stream")
         await jetstream_mgr.add_stream(name="healthos", subjects=[subject])
 
-    global core_jetstream_client
-    core_jetstream_client = nats_connection.jetstream()
+    global jetstream_core_client
+    jetstream_core_client = nats_connection.jetstream()
 
 
-def get_core_jetstream_client() -> JetStreamContext:
+def get_jetstream_core_client() -> JetStreamContext:
     """Returns the NATS jetstream client used for core messaging"""
-    return core_jetstream_client
+    return jetstream_core_client
+
+
+def get_jetstream_client() -> JetStreamContext:
+    """Returns the NATS jetstream client used for external messaging"""
+    return jetstream_client

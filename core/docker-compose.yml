@@ -1,8 +1,38 @@
 services:
-  healthos-core-nats:
+  # "external" NATS Jetstream server used for tutorial exercises
+  external-jetstream:
     image: nats:2.8.4-alpine3.15
     volumes:
-      - ./resources/core-nats:/conf
+      - ./resources/external-jetstream:/conf
+    command: "--config=/conf/nats-server.conf"
+    ports:
+      - "4224:4224"
+    healthcheck:
+      test: ["CMD", "nc", "-zv", "0.0.0.0", "4224"]
+      interval: "2s"
+      timeout: "5s"
+      retries: 3
+      start_period: "2s"
+    profiles:
+      - tutorial
+
+  # configures the external NATS Jetstream server used in the tutorial
+  configure-external-jetstream:
+    image: natsio/nats-box:latest
+    volumes:
+      - ./resources/external-jetstream:/conf
+    profiles:
+      - tutorial
+    depends_on:
+      - external-jetstream
+    entrypoint: "nats"
+    command: "stream add --server external-jetstream:4224 --config /conf/external-stream.conf"
+
+  # the HealthOS Jetstream instances used for "core" messaging
+  healthos-core-jetstream:
+    image: nats:2.8.4-alpine3.15
+    volumes:
+      - ./resources/core-jetstream:/conf
     command: "--config=/conf/nats-server.conf"
     ports:
       - "4222:4222"

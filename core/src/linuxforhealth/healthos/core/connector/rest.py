@@ -7,7 +7,7 @@ from fastapi.routing import APIRouter
 from fastapi import Depends, HTTPException
 import logging
 from ..config import get_core_configuration
-from ..connector import get_core_jetstream_client, PublishDataModel
+from ..connector import get_jetstream_core_client, PublishDataModel
 from pydantic import BaseModel, Field
 from ..detect import validate_message
 from nats.js.errors import NoStreamResponseError
@@ -36,7 +36,7 @@ class RestEndpointRequest(BaseModel):
 async def endpoint_template(
     request_model: RestEndpointRequest,
     core_config=Depends(get_core_configuration),
-    jetstream_client=Depends(get_core_jetstream_client),
+    jetstream_client=Depends(get_jetstream_core_client),
 ):
     """
     Provides an asyncio based template for core connector RestEndpoint implementations.
