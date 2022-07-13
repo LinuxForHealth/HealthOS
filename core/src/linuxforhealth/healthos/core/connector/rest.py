@@ -53,7 +53,7 @@ async def endpoint_template(
     :return: a 200 status code with a response payload containing the request status and id
     """
     data_id = str(uuid.uuid4())
-    logger.debug("Generated {data_id} for incoming payload")
+    logger.debug(f"Generated {data_id} for incoming payload")
 
     try:
         content_type = validate_message(request_model.data)
@@ -84,6 +84,7 @@ async def endpoint_template(
             f"publishing to NATS {messaging_config.stream_name}:{messaging_config.inbound_subject}"
         )
         logger.debug(f"received NATS Ack {publish_ack}")
+        logger.debug(f"returning status = received, id = {data_id}")
         return {"status": "received", "id": data_id}
 
 

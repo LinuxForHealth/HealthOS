@@ -6,6 +6,7 @@ Package level imports are provided for convenience.
 import yaml
 
 from .core import CoreServiceConfig, ConnectorConfig
+from .connector import ConnectorConfig
 
 core_service_config: CoreServiceConfig
 

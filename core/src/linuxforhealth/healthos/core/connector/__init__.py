@@ -7,6 +7,8 @@ Package level imports are provided for convenience.
 from .nats import (
     get_jetstream_core_client,
     create_jetstream_core_client,
+    create_jetstream_client,
+    get_jetstream_client,
     PublishDataModel,
 )
 from .rest import create_inbound_connector_route

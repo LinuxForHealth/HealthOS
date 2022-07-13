@@ -19,8 +19,7 @@ app:
   host: localhost
   debug: False
   messaging:
-    host: localhost
-    port: 4222
+    url: "nats://localhost:4222"
     stream_name: healthos
     inbound_subject: ingress
 

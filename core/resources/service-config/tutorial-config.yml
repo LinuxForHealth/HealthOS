@@ -1,26 +1,27 @@
 connectors:
   - type: inbound
-    id: nats-connector
-    name: Test NATS Client
-    config:
-      type: NatsClient
-      servers: nats://localhost:4222
-      subjects:
-        - hl7-messages
-  - type: inbound
     id: rest-connector
     name: Test REST endpoint
     config:
       type: RestEndpoint
       url: /ingress
       http_method: post
+  - type: inbound
+    id: nats-connector
+    name: Tutorial NATSClient Connector
+    config:
+      type: NatsClient
+      servers:
+        - nats://localhost:4224
+      subjects:
+        - healthy-data
+
 app:
   port: 8080
   host: localhost
   debug: False
   messaging:
-    host: localhost
-    port: 4222
+    url: "nats://localhost:4222"
     stream_name: healthos
     inbound_subject: ingress
 
