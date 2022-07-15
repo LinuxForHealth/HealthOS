@@ -28,6 +28,38 @@ services:
     entrypoint: "nats"
     command: "stream add --server external-jetstream:4224 --config /conf/external-stream.conf"
 
+  # external Kafka and Zookeeper servers used in the tutorial examples
+  external-zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    profiles:
+      - tutorial
+  external-kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=external-zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://external-kafka:9092,EXTERNAL://localhost:9093
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+    healthcheck:
+      test: ["CMD", "/opt/bitnami/common/bin/wait-for-port", "9092"]
+      start_period: 15s
+      interval: 10s
+      timeout: 10s
+      retries: 4
+    depends_on:
+      - zookeeper
+    profiles:
+      - tutorial
+
   # the HealthOS Jetstream instances used for "core" messaging
   healthos-core-jetstream:
     image: nats:2.8.4-alpine3.15
