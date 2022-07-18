@@ -148,6 +148,10 @@ class KafkaConsumerConfig(BaseModel):
         default=None, description="password for sasl PLAIN authentication."
     )
 
+    class Config:
+        extra = "forbid"
+        frozen = True
+
 
 class KafkaProducerConfig(BaseModel):
     """
@@ -238,7 +242,7 @@ class KafkaProducerConfig(BaseModel):
         return values
 
     class Config:
-        extra = "ignore"
+        extra = "forbid"
         frozen = True
 
     @validator("enable_idempotence")

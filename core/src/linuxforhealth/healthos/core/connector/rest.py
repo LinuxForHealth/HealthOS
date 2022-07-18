@@ -4,15 +4,14 @@ rest.py
 Implements Rest API connectors
 """
 from fastapi.routing import APIRouter
-from fastapi import Depends, HTTPException
+from fastapi import HTTPException
 import logging
-from ..config import get_core_configuration
-from ..connector import get_jetstream_core_client, PublishDataModel
+from .processor import process_data
 from pydantic import BaseModel, Field
-from ..detect import validate_message
 from nats.js.errors import NoStreamResponseError
 import uuid
-import json
+from ..detect import ContentType
+from typing import Optional
 
 
 logger = logging.getLogger(__name__)
@@ -33,59 +32,50 @@ class RestEndpointRequest(BaseModel):
         }
 
 
+class RestEndpointResponse(BaseModel):
+    """RestEndpoint Response Object"""
+    status: str = Field(description="Indicates if the data was received or failed validation.",
+                        regex="^(received|failed)$")
+    content_type: Optional[ContentType] = Field(description="The data message's content type. The content type is " +
+                                                "not provided if the data fails validation.")
+    data_id: str = Field(description="The unique id assigned to the data message")
+
+    class Config:
+        extra = "ignore"
+        frozen = True
+        schema_extra = {
+            "example": {
+                "status": "received",
+                "content_type": "application/EDI-X12",
+                "data_id": "8005a343-54dd-43f4-a455-5c38beb545ad"
+            }
+        }
+
+
 async def endpoint_template(
     request_model: RestEndpointRequest,
-    core_config=Depends(get_core_configuration),
-    jetstream_client=Depends(get_jetstream_core_client),
 ):
     """
     Provides an asyncio based template for core connector RestEndpoint implementations.
     Includes configuration and NATS Jetstream dependencies to support publishing to the core NATS Jetstream server.
 
     Response Codes:
-    - 200 for successful processing
-    - 400 if the input message's cannot be parsed
+    - 200 for successful processing which includes valid and invalid data messages
     - 500 if an error occurs transmitting to NATS
 
     :param request_model: The RestEndpoint request model.
-    :param core_config: The Service core configuration.
-    :param jetstream_client: Configured NATS Jetstream client.
-    :return: a 200 status code with a response payload containing the request status and id
+    :return: a 200 status for completed processing or 500 status if an error occurred publishing to NATS
     """
     data_id = str(uuid.uuid4())
     logger.debug(f"Generated {data_id} for incoming payload")
 
     try:
-        content_type = validate_message(request_model.data)
+        publish_model = await process_data(request_model.data)
+        return RestEndpointResponse(data_id=data_id, content_type=publish_model.content_type, status="received")
     except ValueError:
-        msg = "request payload is invalid"
-        logger.error(msg)
-        raise HTTPException(status_code=400, detail=msg)
-
-    publish_model = PublishDataModel(
-        data_id=data_id, data=request_model.data, content_type=content_type
-    )
-    message_payload = json.dumps(publish_model.json()).encode()
-
-    messaging_config = core_config.app.messaging
-    try:
-        publish_ack = await jetstream_client.publish(
-            subject=messaging_config.inbound_subject,
-            stream=messaging_config.stream_name,
-            payload=message_payload,
-        )
-    except NoStreamResponseError as nsre:
-        msg = f"Unable to publish message to {messaging_config.stream_name}:{messaging_config.inbound_subject}"
-        logger.error(msg)
-        logger.error(f"NATS NoStreamResponseError {nsre}")
-        raise HTTPException(status_code=500, detail=msg)
-    else:
-        logger.debug(
-            f"publishing to NATS {messaging_config.stream_name}:{messaging_config.inbound_subject}"
-        )
-        logger.debug(f"received NATS Ack {publish_ack}")
-        logger.debug(f"returning status = received, id = {data_id}")
-        return {"status": "received", "id": data_id}
+        return RestEndpointResponse(data_id=data_id, status="failed")
+    except NoStreamResponseError:
+        raise HTTPException(status_code=500, detail="An internal messaging error occurred")
 
 
 def create_inbound_connector_route(url: str, http_method: str) -> APIRouter:
@@ -98,5 +88,5 @@ def create_inbound_connector_route(url: str, http_method: str) -> APIRouter:
     """
     router = APIRouter(prefix=url)
     router_func = getattr(router, http_method)
-    router_func("")(endpoint_template)
+    router_func("", response_model=RestEndpointResponse)(endpoint_template)
     return router

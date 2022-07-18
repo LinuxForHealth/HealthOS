@@ -112,5 +112,5 @@ class NatsClientConfig(BaseModel):
     )
 
     class Config:
-        extra = "ignore"
+        extra = "forbid"
         frozen = True

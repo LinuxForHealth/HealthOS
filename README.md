@@ -1,14 +1,13 @@
 # LinuxForHealth HealthOS
 
-LinuxForHealth HealthOS provides an interoperable open-sourced health stack for developing highly available, standards compliant, and
-secure applications and services.
+LinuxForHealth HealthOS provides an interoperable open-sourced health stack for developing highly available, 
+standards compliant, and secure applications and services.
 
 The source code for the HealthOS is split into the following modules:
 
 - core: Base level module used for data acquisition, data processing, and data distribution.
-- plugins: Features used to augment core data support, such as de-identification, cohorting, etc.
-- sdk: The HealthOS development SDK provides access to HealthOS data and services for application development.
 - support: Contains common datatypes and services used across the HealthOS.
+- Additional modules TBD
 
 ## Development Dependencies
 
@@ -16,7 +15,7 @@ The HealthOS development environment depends on the following 3rd party packages
 
 - [Python 3.10 or higher](https://www.python.org/downloads/) the HealthOS language runtime.
 - [Poetry](https://python-poetry.org/) for packaging, dependency management, and publishing support.
-- [GNU Make](https://www.gnu.org/software/make/) for component builds.
+- [GNU Make](https://www.gnu.org/software/make/) for module builds.
 - [Pyclean](https://pypi.org/project/pyclean/) removes Python bytecode, used as a cross-platform tool in the build process. 
 
 ## Build Targets
@@ -43,8 +42,9 @@ make dev_env
 ```
 
 ## Common Development Environment
-[Poetry](https://python-poetry.org/) is used within each module to provide consistent dependency management, virtual
-environments, and access to CLI commands.
+Each HealthOS module utilizes the same tooling and conventions. [Poetry](https://python-poetry.org/) is the primary
+tool used to provide the standard development workflow. The following sections highlight the common commands used
+within a HealthOS module, or "sub-directory".
 
 ### Dependency Management
 To add a dependency to a module, execute the following command:
@@ -71,4 +71,11 @@ The LinuxForHealth HealthOS code base uses the [black formatter](https://black.r
 
 ```shell
 poetry run black ./src ./tests
+```
+
+### Unit tests 
+Use [pytest](https://docs.pytest.org/en/7.1.x/) to execute unit tests
+
+```shell
+poetry run pytest
 ```

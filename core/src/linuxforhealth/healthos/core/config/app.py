@@ -27,6 +27,10 @@ class CoreAppMessaging(BaseModel):
         default="ingress",
     )
 
+    class Config:
+        extra = "forbid"
+        frozen = True
+
 
 class CoreApp(BaseModel):
     """
@@ -65,3 +69,7 @@ class CoreApp(BaseModel):
         + "system",
         default=CoreAppMessaging(),
     )
+
+    class Config:
+        extra = "forbid"
+        frozen = True

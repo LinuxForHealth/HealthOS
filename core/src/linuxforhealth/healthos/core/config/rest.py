@@ -17,3 +17,7 @@ class RestEndpointConfig(BaseModel):
         + "a HTTP POST or PUT",
     )
     http_method: str = Field(regex="^(post|put)$", default="post")
+
+    class Config:
+        extra = "forbid"
+        frozen = True

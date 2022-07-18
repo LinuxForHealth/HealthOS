@@ -21,14 +21,10 @@ class CoreServiceConfig(BaseModel):
 
     connectors: List[ConnectorConfig]
     app: CoreApp
-    # TODO: implement support for:
-    # - auditing
-    # - data synchronization
-    # - observability/metrics
     logging_config: str
 
     class Config:
-        extra = "ignore"
+        extra = "forbid"
         frozen = True
 
     @property

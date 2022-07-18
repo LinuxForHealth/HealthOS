@@ -7,6 +7,7 @@ import yaml
 
 from .core import CoreServiceConfig, ConnectorConfig
 from .connector import ConnectorConfig
+from typing import List
 
 core_service_config: CoreServiceConfig
 
@@ -28,3 +29,4 @@ def load_core_configuration(file_path: str):
 def get_core_configuration() -> CoreServiceConfig:
     """Returns the core service configuration"""
     return core_service_config
+

@@ -9,7 +9,7 @@
 ifdef TARGET_MODULES
 	TARGET_MODULES := $(TARGET_MODULES)
 else
-	TARGET_MODULES := core plugins sdk support
+	TARGET_MODULES := core support
 endif
 
 # removes python bytecode and untracked dependencies for a module
@@ -35,11 +35,12 @@ endef
 wheels: clean
 	$(foreach module,$(TARGET_MODULES), $(call install_dependencies_omit_dev,$(module)))
 	$(foreach module,$(TARGET_MODULES), $(call build_wheel,$(module)))
+.PHONY: wheels
 
 clean:
 	$(foreach module,$(TARGET_MODULES), $(call clean_module,$(module)))
+.PHONY: clean
 
 dev_env: clean
 	$(foreach module,$(TARGET_MODULES), $(call install_dependencies_omit_dev,$(module)))
-
-.PHONY: clean dev_env wheels
+.PHONY: dev_env

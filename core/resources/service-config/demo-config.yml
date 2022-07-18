@@ -8,13 +8,21 @@ connectors:
       http_method: post
   - type: inbound
     id: nats-connector
-    name: Tutorial NATSClient Connector
+    name: Demo NATSClient Connector
     config:
       type: NatsClient
       servers:
         - nats://localhost:4224
       subjects:
         - healthy-data
+  - type: inbound
+    id: kafka-connector
+    name: Demo Kafka Consumer Connector
+    config:
+      type: KafkaConsumer
+      topics:
+        - healthy-data
+      bootstrap-servers: "localhost:9092"
 
 app:
   port: 8080
