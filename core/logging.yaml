@@ -15,5 +15,7 @@ root:
 loggers:
   linuxforhealth.healthos.core:
     level: DEBUG
+  aiokafka:
+    level: WARN
   uvicorn:
-    level: INFO
+    level: WARN

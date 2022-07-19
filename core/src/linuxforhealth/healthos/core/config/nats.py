@@ -2,8 +2,9 @@
 nats.py
 Pydantic models used to support connector configurations for the NATS Client.
 """
+from typing import List, Literal, Optional, Tuple, Union
+
 from pydantic import BaseModel, Field
-from typing import List, Optional, Union, Tuple, Literal
 
 
 class NatsClientConfig(BaseModel):
@@ -17,7 +18,7 @@ class NatsClientConfig(BaseModel):
     - subscriptions
     """
 
-    type: Literal["NatsClient"]
+    type: Literal["NatsClient"] = "NatsClient"
 
     servers: str | List[str] = Field(
         description="URL to NATS server instance(s).", default=["nats://localhost:4222"]
@@ -112,5 +113,5 @@ class NatsClientConfig(BaseModel):
     )
 
     class Config:
-        extra = "ignore"
+        extra = "forbid"
         frozen = True

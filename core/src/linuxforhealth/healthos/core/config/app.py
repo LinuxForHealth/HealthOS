@@ -5,8 +5,9 @@ Defines the data model used to support the Core service's "app" configuration.
 The Core service app provides the event loop used for core service components such as connectors, as
 well as Admin API interfaces.
 """
-from pydantic import BaseModel, Field
 from typing import Optional
+
+from pydantic import BaseModel, Field
 
 
 class CoreAppMessaging(BaseModel):
@@ -26,6 +27,10 @@ class CoreAppMessaging(BaseModel):
         description="The messaging subject used to receive all inbound/ingress messages",
         default="ingress",
     )
+
+    class Config:
+        extra = "forbid"
+        frozen = True
 
 
 class CoreApp(BaseModel):
@@ -65,3 +70,7 @@ class CoreApp(BaseModel):
         + "system",
         default=CoreAppMessaging(),
     )
+
+    class Config:
+        extra = "forbid"
+        frozen = True

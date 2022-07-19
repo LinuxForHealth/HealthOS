@@ -3,10 +3,12 @@ config.py
 The config module contains the Pydantic domain models used to support the core service configuration file.
 Package level imports are provided for convenience.
 """
+from typing import List
+
 import yaml
 
-from .core import CoreServiceConfig, ConnectorConfig
 from .connector import ConnectorConfig
+from .core import ConnectorConfig, CoreServiceConfig
 
 core_service_config: CoreServiceConfig
 

@@ -14,6 +14,14 @@ connectors:
       type: RestEndpoint
       url: /ingress
       http_method: post
+  - type: inbound
+    id: kafka-connector
+    name: Test Kafka Consumer
+    config:
+      type: KafkaConsumer
+      topics:
+        - healthy-data
+      bootstrap_servers: "localhost:9092"
 app:
   port: 8080
   host: localhost

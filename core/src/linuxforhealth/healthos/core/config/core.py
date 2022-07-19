@@ -2,11 +2,12 @@
 core.py
 The top level domain model for the Core service configuration.
 """
+from typing import List
+
 from pydantic import BaseModel
 
-from .connector import ConnectorConfig
 from .app import CoreApp
-from typing import List
+from .connector import ConnectorConfig
 
 
 class CoreServiceConfig(BaseModel):
@@ -21,14 +22,10 @@ class CoreServiceConfig(BaseModel):
 
     connectors: List[ConnectorConfig]
     app: CoreApp
-    # TODO: implement support for:
-    # - auditing
-    # - data synchronization
-    # - observability/metrics
     logging_config: str
 
     class Config:
-        extra = "ignore"
+        extra = "forbid"
         frozen = True
 
     @property

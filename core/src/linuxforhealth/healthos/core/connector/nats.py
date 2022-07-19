@@ -6,35 +6,23 @@ The ingress client pulls data from external systems.
 The core client submits data to "internal" NATS subjects which power the HealthOS core pipeline.
 The egress client transmits data to external systems.
 """
-import nats
-from nats.js import JetStreamManager, JetStreamContext
 import logging
-from nats.js.errors import NotFoundError
-from pydantic import BaseModel, Field
-import uuid
-from ..detect import ContentType
 from typing import List
-from ..config import CoreServiceConfig, get_core_configuration
+
+import nats
+from nats.js import JetStreamContext, JetStreamManager
+from nats.js.errors import NotFoundError
+
+from ..config import ConnectorConfig, CoreServiceConfig, get_core_configuration
+from .processor import PublishDataModel, process_data
 
 logger = logging.getLogger(__name__)
 
 # client used for core messaging
-jetstream_core_client: JetStreamContext
+jetstream_core_client: JetStreamContext | None = None
 
-# client used for messaging with external systems
-jetstream_client: JetStreamContext
-
-
-class PublishDataModel(BaseModel):
-    """
-    Model used to publish data to NATS Jetstream
-    """
-
-    data_id: uuid.UUID = Field(
-        description="The unique id for the data message", default=uuid.uuid4()
-    )
-    data: str = Field(description="The data payload")
-    content_type: ContentType = Field(description="The data content-type")
+# clients used for messaging with external systems
+jetstream_clients: List[JetStreamContext] | None = None
 
 
 async def create_jetstream_core_client(url: str, stream_name: str, subject: str):
@@ -73,40 +61,49 @@ async def create_jetstream_core_client(url: str, stream_name: str, subject: str)
     jetstream_core_client = nats_connection.jetstream()
 
 
-async def create_jetstream_client(urls: List[str], subjects: List[str]):
+async def create_inbound_jetstream_clients(inbound_nats_clients: List[ConnectorConfig]):
     """
-    Creates a NATS client which is subscribed to a one or more subjects on a specific host.
+    Creates inbound jetstream clients from specified configurations.
 
-    :param urls: The NATS server urls, including protocol, host, and port.
-    :param subjects: The NATS server subjects to subscribe to.
+    :param inbound_nats_clients: The inbound NATS Jetstream configurations
     """
-    nats_connection: nats.NATS
-    jetstream_mgr: JetStreamManager
+    global jetstream_clients
+    jetstream_clients = []
 
-    try:
-        nats_connection = await nats.connect(urls)
-    except Exception as ex:
-        logger.error("An error occurred connecting to the external Jetstream server")
-        logger.error(f"{ex}")
-        raise
+    for c in inbound_nats_clients:
+        subscription_subjects = c.config.subjects
+        connection_config = c.config.dict(exclude={"type", "subjects"})
+        try:
+            nats_connection = await nats.connect(**connection_config)
+        except Exception as ex:
+            logger.error(
+                "An error occurred connecting to the external Jetstream server"
+            )
+            logger.error(f"{ex}")
+            raise
 
-    logger.info(f"NATS Client Connected to external Jetstream server {urls}")
+        logger.info(
+            f"NATS Client Connected to external Jetstream server {c.config.servers}"
+        )
 
-    global jetstream_client
-    jetstream_client = nats_connection.jetstream()
-    for s in subjects:
-        await jetstream_client.subscribe(s, cb=inbound_connector_callback)
-        logger.info(f"Subscribed to subject {s}")
+        jetstream_client = nats_connection.jetstream()
+        jetstream_clients.append(jetstream_client)
+
+        for s in subscription_subjects:
+            await jetstream_client.subscribe(s, cb=inbound_connector_callback)
+            logger.info(f"Subscribed to subject {s}")
 
 
 def get_jetstream_core_client() -> JetStreamContext:
     """Returns the NATS jetstream client used for core messaging"""
+    global jetstream_core_client
     return jetstream_core_client
 
 
-def get_jetstream_client() -> JetStreamContext:
+def get_jetstream_client() -> List[JetStreamContext]:
     """Returns the NATS jetstream client used for external messaging"""
-    return jetstream_client
+    global jetstream_clients
+    return jetstream_clients
 
 
 async def inbound_connector_callback(msg):
@@ -119,12 +116,10 @@ async def inbound_connector_callback(msg):
     await msg.ack()
 
     service_config: CoreServiceConfig = get_core_configuration()
-    core_client: JetStreamContext = get_jetstream_core_client()
+    messaging_config = service_config.app.messaging
 
-    ack = await core_client.publish(
-        service_config.app.messaging.inbound_subject, msg.data
-    )
-    logger.debug(
-        f"published message to {service_config.app.messaging.inbound_subject}, received ack {ack}"
-    )
+    msg_str = msg.data.decode("utf-8")
+    publish_model: PublishDataModel = await process_data(msg_str)
 
+    logger.debug(f"published message to {messaging_config.inbound_subject}")
+    logger.debug(f"message metadata {publish_model.dict()}")

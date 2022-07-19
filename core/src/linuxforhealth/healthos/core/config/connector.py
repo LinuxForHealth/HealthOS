@@ -3,11 +3,13 @@ connector.py
 
 Pydantic domain models for Core Service connectors.
 """
+from typing import Annotated, Dict, Union
+
 from pydantic import BaseModel, Field, root_validator
+
 from .kafka import KafkaConsumerConfig, KafkaProducerConfig
 from .nats import NatsClientConfig
 from .rest import RestEndpointConfig
-from typing import Dict
 
 
 class ConnectorConfig(BaseModel):
@@ -29,12 +31,18 @@ class ConnectorConfig(BaseModel):
         description="The connector id used to locate the service for admin operations"
     )
     name: str = Field(description="The user defined connector name")
-    config: KafkaProducerConfig | KafkaConsumerConfig | NatsClientConfig | RestEndpointConfig = Field(
-        description="The connector configuration settings"
-    )
+    config: Annotated[
+        Union[
+            KafkaConsumerConfig,
+            KafkaProducerConfig,
+            NatsClientConfig,
+            RestEndpointConfig,
+        ],
+        Field(discriminator="type"),
+    ]
 
     class Config:
-        extra = "ignore"
+        extra = "forbid"
         frozen = True
 
     @root_validator(skip_on_failure=True)
@@ -44,7 +52,7 @@ class ConnectorConfig(BaseModel):
         :param cls: The class instance
         :param values: The current config values
         :return: the current values
-        :raises: ValueError if
+        :raises: ValueError if the connector type and config type are invalid
         """
         connector_type = values.get("type")
         config_type = values.get("config", {}).type

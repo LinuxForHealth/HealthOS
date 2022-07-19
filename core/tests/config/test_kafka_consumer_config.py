@@ -3,10 +3,12 @@ test_kafka_consumer_config.py
 
 Tests the Kafka Consumer configuration model
 """
-import pytest
 from typing import Dict, List
-from linuxforhealth.healthos.core.config.kafka import KafkaConsumerConfig
+
+import pytest
 from pydantic import ValidationError
+
+from linuxforhealth.healthos.core.config.kafka import KafkaConsumerConfig
 
 
 @pytest.fixture
