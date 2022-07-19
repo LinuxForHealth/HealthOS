@@ -21,7 +21,7 @@ connectors:
       type: KafkaConsumer
       topics:
         - healthy-data
-      bootstrap-servers: "localhost:9092"
+      bootstrap_servers: "localhost:9092"
 app:
   port: 8080
   host: localhost

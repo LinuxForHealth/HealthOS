@@ -68,7 +68,6 @@ def test_validate_minimum_rest_input():
     ConnectorConfig(**config_data)
 
     config_data["type"] = "outbound"
-    config_data["rest_host"] = "some-server"
     ConnectorConfig(**config_data)
 
 

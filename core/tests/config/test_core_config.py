@@ -63,7 +63,7 @@ def test_inbound_kafka_connectors_property(core_configuration: CoreServiceConfig
     kafka_connectors: List[
         ConnectorConfig
     ] = core_configuration.inbound_kafka_connectors
-    assert len(kafka_connectors) == 0
+    assert len(kafka_connectors) == 1
 
 
 def test_load_core_service_configuration(core_configuration: CoreServiceConfig):
@@ -73,8 +73,8 @@ def test_load_core_service_configuration(core_configuration: CoreServiceConfig):
     :param core_configuration: The core service configuration model
     """
     assert isinstance(core_configuration.connectors, list)
-    assert len(core_configuration.connectors) == 2
-    assert len(core_configuration.inbound_connectors) == 2
+    assert len(core_configuration.connectors) == 3
+    assert len(core_configuration.inbound_connectors) == 3
 
 
 def test_load_core_service_configuration_invalid_path():

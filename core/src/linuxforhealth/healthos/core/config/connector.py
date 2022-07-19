@@ -3,9 +3,9 @@ connector.py
 
 Pydantic domain models for Core Service connectors.
 """
-from typing import Annotated, Union
+from typing import Annotated, Dict, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, root_validator
 
 from .kafka import KafkaConsumerConfig, KafkaProducerConfig
 from .nats import NatsClientConfig
@@ -45,21 +45,21 @@ class ConnectorConfig(BaseModel):
         extra = "forbid"
         frozen = True
 
-    # @root_validator(skip_on_failure=True)
-    # def validate_connector_type_config(cls, values: Dict) -> Dict:
-    #     """
-    #     Ensures that the Connector type, inbound or outbound, is compatible with the associated config.
-    #     :param cls: The class instance
-    #     :param values: The current config values
-    #     :return: the current values
-    #     :raises: ValueError if the connector type and config type are invalid
-    #     """
-    #     connector_type = values.get("type")
-    #     config_type = values.get("config", {}).type
-    #     supported_configs = cls._connector_type_config.get(connector_type)
-    #
-    #     if config_type not in supported_configs:
-    #         msg = f"{config_type} is not a valid {connector_type} connector type"
-    #         raise ValueError(msg)
-    #
-    #     return values
+    @root_validator(skip_on_failure=True)
+    def validate_connector_type_config(cls, values: Dict) -> Dict:
+        """
+        Ensures that the Connector type, inbound or outbound, is compatible with the associated config.
+        :param cls: The class instance
+        :param values: The current config values
+        :return: the current values
+        :raises: ValueError if the connector type and config type are invalid
+        """
+        connector_type = values.get("type")
+        config_type = values.get("config", {}).type
+        supported_configs = cls._connector_type_config.get(connector_type)
+
+        if config_type not in supported_configs:
+            msg = f"{config_type} is not a valid {connector_type} connector type"
+            raise ValueError(msg)
+
+        return values
