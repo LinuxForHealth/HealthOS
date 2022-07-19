@@ -64,6 +64,21 @@ poetry run healthos core -f ./resources/service-config/demo-config.yml
 ```
 
 #### Kafka Consumer
+In a separate terminal, execute the following command to submit a message to the "external" Kafka system.
+This simulates the system receiving a message which will be consumed by the HealthOS "inbound" connector.
+
+```shell
+docker-compose exec external-kafka /opt/scripts/send-demo-message.sh
+```
+
+The output will look similar to
+
+```shell
+2022-07-19 14:22:45,424 - linuxforhealth.healthos.core.connector.processor - DEBUG - publishing to NATS healthos:ingress
+2022-07-19 14:22:45,424 - linuxforhealth.healthos.core.connector.processor - DEBUG - received NATS Ack PubAck(stream='healthos', seq=2, domain=None, duplicate=None)
+2022-07-19 14:22:45,424 - linuxforhealth.healthos.core.connector.processor - DEBUG - returning status = received, id = dd7ed6be-7df7-415b-9929-68d3f9804c28
+2022-07-19 14:22:45,424 - linuxforhealth.healthos.core.connector.kafka - DEBUG - published data to NATS data_id = dd7ed6be-7df7-415b-9929-68d3f9804c28 content_type = application/EDI-X12
+```
 
 #### NATS Client
 

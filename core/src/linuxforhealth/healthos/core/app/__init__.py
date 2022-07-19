@@ -17,7 +17,9 @@ from pydantic import ValidationError
 from ..config import (ConnectorConfig, CoreServiceConfig,
                       get_core_configuration, load_core_configuration)
 from ..connector import (create_inbound_connector_route,
-                         create_jetstream_client, create_jetstream_core_client)
+                         create_inbound_jetstream_clients,
+                         create_jetstream_core_client,
+                         create_kafka_consumer_connector)
 from .admin import router as admin_router
 
 logger = logging.getLogger(__name__)
@@ -56,9 +58,12 @@ def core_startup(args):
         sys.exit(1)
     else:
         # use partial functions to align with the Fast API/starlette "no-arg" event handler functions
+
+        # configure logging
         startup_logging = partial(configure_logging, core_config.logging_config)
         core_service_app.add_event_handler("startup", startup_logging)
 
+        # configure endpoints
         startup_endpoints = partial(
             configure_inbound_endpoints,
             core_service_app,
@@ -66,20 +71,26 @@ def core_startup(args):
         )
         core_service_app.add_event_handler("startup", startup_endpoints)
 
+        # configure internal NATS (Jetstream)
         startup_internal_nats = partial(
             create_jetstream_core_client,
             core_config.app.messaging.url,
             core_config.app.messaging.stream_name,
             core_config.app.messaging.inbound_subject,
         )
-
         core_service_app.add_event_handler("startup", startup_internal_nats)
 
+        # configure external/inbound NATS (Jetstream)
         startup_inbound_jetstream = partial(
-            configure_nats_clients, core_config.inbound_nats_connectors
+            create_inbound_jetstream_clients, core_config.inbound_nats_connectors
         )
-
         core_service_app.add_event_handler("startup", startup_inbound_jetstream)
+
+        # configure Kafka consumer for external cluster
+        startup_kafka_consumers = partial(
+            create_kafka_consumer_connector, core_config.inbound_kafka_connectors
+        )
+        core_service_app.add_event_handler("startup", startup_kafka_consumers)
 
         uvicorn_params = {
             "app": core_service_app,
@@ -133,20 +144,3 @@ def configure_inbound_endpoints(
         logger.info(
             f"Adding Inbound RestEndpoint Connector to {APP_BASE_URL}/{r.prefix}"
         )
-
-
-async def configure_nats_clients(inbound_nats_connectors: List[ConnectorConfig]):
-    """
-    Configures NatsClient inbound connectors for the Core service application
-
-    :param inbound_nats_connectors: The connector configuration for the inbound NATS connectors
-    """
-    nats_urls: List[str] = []
-    jetstream_subjects: List[str] = []
-
-    for c in inbound_nats_connectors:
-        nats_urls.extend(c.config.servers)
-        jetstream_subjects.extend(c.config.subjects)
-
-    if nats_urls and jetstream_subjects:
-        await create_jetstream_client(nats_urls, jetstream_subjects)
