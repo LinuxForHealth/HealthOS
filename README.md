@@ -79,3 +79,10 @@ Use [pytest](https://docs.pytest.org/en/7.1.x/) to execute unit tests
 ```shell
 poetry run pytest
 ```
+
+### Tidying Up Imports
+Use [isort](https://pycqa.github.io/isort/) to clean up the project's imports
+
+```shell
+poetry run isort .
+```
