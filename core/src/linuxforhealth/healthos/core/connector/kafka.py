@@ -67,3 +67,9 @@ async def create_kafka_consumer_connector(
     except Exception as ex:
         logger.error(f"Unable to start Kafka Consumer. Error {ex}")
         raise
+
+
+def get_kafka_consumer_connectors() -> List[AIOKafkaConsumer]:
+    """Returns the Kafka Consumer Connectors"""
+    global kafka_consumer_connectors
+    return kafka_consumer_connectors or []

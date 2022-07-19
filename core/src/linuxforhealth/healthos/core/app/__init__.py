@@ -19,7 +19,9 @@ from ..config import (ConnectorConfig, CoreServiceConfig,
 from ..connector import (create_inbound_connector_route,
                          create_inbound_jetstream_clients,
                          create_jetstream_core_client,
-                         create_kafka_consumer_connector)
+                         create_kafka_consumer_connector, get_jetstream_client,
+                         get_jetstream_core_client,
+                         get_kafka_consumer_connectors)
 from .admin import router as admin_router
 
 logger = logging.getLogger(__name__)
@@ -92,6 +94,8 @@ def core_startup(args):
         )
         core_service_app.add_event_handler("startup", startup_kafka_consumers)
 
+        core_service_app.add_event_handler("shutdown", close_connectors)
+
         uvicorn_params = {
             "app": core_service_app,
             "host": core_config.app.host,
@@ -144,3 +148,20 @@ def configure_inbound_endpoints(
         logger.info(
             f"Adding Inbound RestEndpoint Connector to {APP_BASE_URL}/{r.prefix}"
         )
+
+
+async def close_connectors():
+    """Closes down registered connectors"""
+
+    logger.info("Shutting down HealthOS Core Connectors")
+
+    for k in get_kafka_consumer_connectors():
+        logger.info(f"Stopping Kafka Connectors")
+        await k.stop()
+
+    for n in get_jetstream_client():
+        logger.info(f"Stopping NATS Jetstream Connectors")
+        await n._nc.close()
+
+    logger.info("Stopping Core NATS Jetstream Connector")
+    await get_jetstream_core_client()._nc.close()
