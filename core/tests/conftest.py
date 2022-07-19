@@ -1,5 +1,6 @@
-from tests.support import resources_directory
 import pytest
+
+from tests.support import resources_directory
 
 
 @pytest.fixture

@@ -3,8 +3,10 @@ test_core_app_messaging.py
 
 Test cases for the Core App Messaging configuration.
 """
-import pytest
 from typing import Dict
+
+import pytest
+
 from linuxforhealth.healthos.core.config.app import CoreAppMessaging
 
 

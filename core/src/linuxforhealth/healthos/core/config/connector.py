@@ -3,11 +3,13 @@ connector.py
 
 Pydantic domain models for Core Service connectors.
 """
-from pydantic import BaseModel, Field, root_validator
+from typing import Annotated, Union
+
+from pydantic import BaseModel, Field
+
 from .kafka import KafkaConsumerConfig, KafkaProducerConfig
 from .nats import NatsClientConfig
 from .rest import RestEndpointConfig
-from typing import Dict, Union
 
 
 class ConnectorConfig(BaseModel):
@@ -29,29 +31,35 @@ class ConnectorConfig(BaseModel):
         description="The connector id used to locate the service for admin operations"
     )
     name: str = Field(description="The user defined connector name")
-    config: Union[KafkaConsumerConfig, KafkaProducerConfig, NatsClientConfig, RestEndpointConfig] = Field(
-        description="The connector configuration settings"
-    )
+    config: Annotated[
+        Union[
+            KafkaConsumerConfig,
+            KafkaProducerConfig,
+            NatsClientConfig,
+            RestEndpointConfig,
+        ],
+        Field(discriminator="type"),
+    ]
 
     class Config:
         extra = "forbid"
         frozen = True
 
-    @root_validator(skip_on_failure=True)
-    def validate_connector_type_config(cls, values: Dict) -> Dict:
-        """
-        Ensures that the Connector type, inbound or outbound, is compatible with the associated config.
-        :param cls: The class instance
-        :param values: The current config values
-        :return: the current values
-        :raises: ValueError if the connector type and config type are invalid
-        """
-        connector_type = values.get("type")
-        config_type = values.get("config", {}).type
-        supported_configs = cls._connector_type_config.get(connector_type)
-
-        if config_type not in supported_configs:
-            msg = f"{config_type} is not a valid {connector_type} connector type"
-            raise ValueError(msg)
-
-        return values
+    # @root_validator(skip_on_failure=True)
+    # def validate_connector_type_config(cls, values: Dict) -> Dict:
+    #     """
+    #     Ensures that the Connector type, inbound or outbound, is compatible with the associated config.
+    #     :param cls: The class instance
+    #     :param values: The current config values
+    #     :return: the current values
+    #     :raises: ValueError if the connector type and config type are invalid
+    #     """
+    #     connector_type = values.get("type")
+    #     config_type = values.get("config", {}).type
+    #     supported_configs = cls._connector_type_config.get(connector_type)
+    #
+    #     if config_type not in supported_configs:
+    #         msg = f"{config_type} is not a valid {connector_type} connector type"
+    #         raise ValueError(msg)
+    #
+    #     return values

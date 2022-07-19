@@ -3,15 +3,15 @@ test_core_config.py
 
 Test cases for the top level "core" service model.
 """
-import pytest
-from typing import List
 import os
-from linuxforhealth.healthos.core.config import (
-    load_core_configuration,
-    get_core_configuration,
-    CoreServiceConfig,
-    ConnectorConfig,
-)
+from typing import List
+
+import pytest
+
+from linuxforhealth.healthos.core.config import (ConnectorConfig,
+                                                 CoreServiceConfig,
+                                                 get_core_configuration,
+                                                 load_core_configuration)
 
 
 @pytest.fixture

@@ -2,11 +2,12 @@
 core.py
 The top level domain model for the Core service configuration.
 """
+from typing import List
+
 from pydantic import BaseModel
 
-from .connector import ConnectorConfig
 from .app import CoreApp
-from typing import List
+from .connector import ConnectorConfig
 
 
 class CoreServiceConfig(BaseModel):

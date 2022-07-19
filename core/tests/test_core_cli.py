@@ -1,9 +1,11 @@
-import pytest
-from linuxforhealth.healthos.core.cli import main
-from linuxforhealth.healthos.core.app import uvicorn
 from contextlib import nullcontext as does_not_raise
-from tests.support import resources_directory
 from unittest.mock import patch
+
+import pytest
+
+from linuxforhealth.healthos.core.app import uvicorn
+from linuxforhealth.healthos.core.cli import main
+from tests.support import resources_directory
 
 
 @pytest.mark.parametrize(

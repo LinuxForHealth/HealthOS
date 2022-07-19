@@ -3,16 +3,17 @@ rest.py
 
 Implements Rest API connectors
 """
-from fastapi.routing import APIRouter
-from fastapi import HTTPException
 import logging
-from .processor import process_data
-from pydantic import BaseModel, Field
-from nats.js.errors import NoStreamResponseError
 import uuid
-from ..detect import ContentType
 from typing import Optional
 
+from fastapi import HTTPException
+from fastapi.routing import APIRouter
+from nats.js.errors import NoStreamResponseError
+from pydantic import BaseModel, Field
+
+from ..detect import ContentType
+from .processor import process_data
 
 logger = logging.getLogger(__name__)
 
@@ -34,10 +35,15 @@ class RestEndpointRequest(BaseModel):
 
 class RestEndpointResponse(BaseModel):
     """RestEndpoint Response Object"""
-    status: str = Field(description="Indicates if the data was received or failed validation.",
-                        regex="^(received|failed)$")
-    content_type: Optional[ContentType] = Field(description="The data message's content type. The content type is " +
-                                                "not provided if the data fails validation.")
+
+    status: str = Field(
+        description="Indicates if the data was received or failed validation.",
+        regex="^(received|failed)$",
+    )
+    content_type: Optional[ContentType] = Field(
+        description="The data message's content type. The content type is "
+        + "not provided if the data fails validation."
+    )
     data_id: str = Field(description="The unique id assigned to the data message")
 
     class Config:
@@ -47,7 +53,7 @@ class RestEndpointResponse(BaseModel):
             "example": {
                 "status": "received",
                 "content_type": "application/EDI-X12",
-                "data_id": "8005a343-54dd-43f4-a455-5c38beb545ad"
+                "data_id": "8005a343-54dd-43f4-a455-5c38beb545ad",
             }
         }
 
@@ -71,11 +77,15 @@ async def endpoint_template(
 
     try:
         publish_model = await process_data(request_model.data)
-        return RestEndpointResponse(data_id=data_id, content_type=publish_model.content_type, status="received")
+        return RestEndpointResponse(
+            data_id=data_id, content_type=publish_model.content_type, status="received"
+        )
     except ValueError:
         return RestEndpointResponse(data_id=data_id, status="failed")
     except NoStreamResponseError:
-        raise HTTPException(status_code=500, detail="An internal messaging error occurred")
+        raise HTTPException(
+            status_code=500, detail="An internal messaging error occurred"
+        )
 
 
 def create_inbound_connector_route(url: str, http_method: str) -> APIRouter:

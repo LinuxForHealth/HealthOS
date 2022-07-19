@@ -4,16 +4,15 @@ processor.py
 Common data processing implementations for HealthOS connectors.
 """
 import json
+import logging
 import uuid
 
-from nats.js.errors import NoStreamResponseError
 from nats.js import JetStreamContext
+from nats.js.errors import NoStreamResponseError
 from pydantic import BaseModel, Field
 
 from ..config import get_core_configuration
-from ..detect import validate_message, ContentType
-import logging
-
+from ..detect import ContentType, validate_message
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +50,7 @@ async def process_data(msg: str) -> PublishDataModel:
 
     # workaround for circular import
     from .nats import get_jetstream_core_client
+
     core_client: JetStreamContext = get_jetstream_core_client()
 
     try:

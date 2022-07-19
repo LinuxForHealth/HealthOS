@@ -2,13 +2,14 @@
 detect.py
 Provides functions pertaining to message format detection and validation.
 """
-from enum import Enum
-import logging
 import json
+import logging
+from enum import Enum
 from typing import Dict
-from linuxforhealth.x12.io import X12ModelReader
-from fhir.resources import construct_fhir_element
+
 import hl7
+from fhir.resources import construct_fhir_element
+from linuxforhealth.x12.io import X12ModelReader
 
 logger = logging.getLogger(__name__)
 

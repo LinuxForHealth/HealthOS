@@ -3,10 +3,12 @@ test_kafka_producer_config.py
 
 Tests the Kafka Producer configuration model
 """
-import pytest
 from typing import Dict, List
-from linuxforhealth.healthos.core.config.kafka import KafkaProducerConfig
+
+import pytest
 from pydantic import ValidationError
+
+from linuxforhealth.healthos.core.config.kafka import KafkaProducerConfig
 
 
 @pytest.fixture

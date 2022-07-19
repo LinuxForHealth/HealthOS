@@ -3,8 +3,9 @@ kafka.py
 
 Pydantic models used to support connector configurations for Kafka Consumers and Producers.
 """
+from typing import Any, Dict, List, Literal, Optional
+
 from pydantic import BaseModel, Field, root_validator, validator
-from typing import List, Optional, Literal, Dict, Any
 
 
 class KafkaConsumerConfig(BaseModel):
@@ -14,7 +15,7 @@ class KafkaConsumerConfig(BaseModel):
     The fields within this configuration support the instantiation of the aiokafka KafkaConsumer class.
     """
 
-    type: Literal["KafkaConsumer"]
+    type: Literal["KafkaConsumer"] = "KafkaConsumer"
 
     topics: List[str] = Field(
         description="The Kafka topics to subscribe to. Multiple values are separated by commas."
@@ -160,7 +161,7 @@ class KafkaProducerConfig(BaseModel):
     The fields within this configuration support the instantiation of the aiokafka KafkaProducer class.
     """
 
-    type: Literal["KafkaProducer"]
+    type: Literal["KafkaProducer"] = "KafkaProducer"
 
     bootstrap_servers: str | List = Field(
         description="host[:port] or list of host[:port] the producer connects to."

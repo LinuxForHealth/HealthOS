@@ -6,9 +6,10 @@ HealthOS Core Service CLI "entrypoint". The CLI supports the following subparser
 - admin: admin cli for core services
 """
 import argparse
-from typing import List
 import logging.config
 import sys
+from typing import List
+
 from linuxforhealth.healthos.core.app import core_startup
 
 CLI_DESCRIPTION = """

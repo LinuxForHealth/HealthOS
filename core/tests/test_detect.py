@@ -1,13 +1,13 @@
 """
 test_detect
 """
-import pytest
 import os
-from linuxforhealth.healthos.core.detect import (
-    detect_content_type,
-    ContentType,
-    validate_message,
-)
+
+import pytest
+
+from linuxforhealth.healthos.core.detect import (ContentType,
+                                                 detect_content_type,
+                                                 validate_message)
 
 
 @pytest.fixture

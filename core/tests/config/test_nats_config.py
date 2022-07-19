@@ -3,10 +3,12 @@ test_nats_config.py
 
 Test cases for Nats Client connector configuration.
 """
-import pytest
 from typing import Dict
-from linuxforhealth.healthos.core.config.nats import NatsClientConfig
+
+import pytest
 from pydantic import ValidationError
+
+from linuxforhealth.healthos.core.config.nats import NatsClientConfig
 
 
 @pytest.fixture

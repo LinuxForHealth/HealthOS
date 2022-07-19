@@ -4,10 +4,9 @@ test_connector_config.py
 Test cases for the Connector configuration model.
 """
 import pytest
-from linuxforhealth.healthos.core.config.connector import (
-    ConnectorConfig,
-)
 from pydantic import ValidationError
+
+from linuxforhealth.healthos.core.config.connector import ConnectorConfig
 
 
 def test_validate_minimum_kafka_consumer_input():

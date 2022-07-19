@@ -3,8 +3,10 @@ test_core_app_config.py
 
 Test cases for the Application configuration model.
 """
-import pytest
 from typing import Dict
+
+import pytest
+
 from linuxforhealth.healthos.core.config.app import CoreApp
 
 

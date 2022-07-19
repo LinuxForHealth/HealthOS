@@ -6,14 +6,15 @@ The ingress client pulls data from external systems.
 The core client submits data to "internal" NATS subjects which power the HealthOS core pipeline.
 The egress client transmits data to external systems.
 """
-import nats
-from nats.js import JetStreamManager, JetStreamContext
 import logging
+from typing import List
+
+import nats
+from nats.js import JetStreamContext, JetStreamManager
 from nats.js.errors import NotFoundError
 
-from typing import List
 from ..config import CoreServiceConfig, get_core_configuration
-from .processor import process_data, PublishDataModel
+from .processor import PublishDataModel, process_data
 
 logger = logging.getLogger(__name__)
 

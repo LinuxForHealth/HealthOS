@@ -4,10 +4,11 @@ kafka.py
 Implements Kafka connectors for consuming and publishing data.
 """
 import logging
+from typing import Dict
 
 from aiokafka import AIOKafkaConsumer
-from typing import Dict
-from .processor import process_data, PublishDataModel
+
+from .processor import PublishDataModel, process_data
 
 kafka_consumer_connector: AIOKafkaConsumer
 
@@ -38,6 +39,3 @@ async def start_kafka_consumer_connector(consumer_config: Dict):
             publish_model: PublishDataModel = process_data(msg)
         except ValueError as ve:
             logger.warning(f"Invalid message. Exception {ve}")
-
-
-

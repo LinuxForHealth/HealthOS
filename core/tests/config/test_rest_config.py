@@ -3,10 +3,12 @@ test_rest_config.py
 
 Test cases for RestEndpoint connector configuration.
 """
-from linuxforhealth.healthos.core.config.rest import RestEndpointConfig
-from pydantic import ValidationError
-import pytest
 from typing import Dict
+
+import pytest
+from pydantic import ValidationError
+
+from linuxforhealth.healthos.core.config.rest import RestEndpointConfig
 
 
 @pytest.fixture
