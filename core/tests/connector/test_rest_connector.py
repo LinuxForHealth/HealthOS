@@ -84,3 +84,4 @@ async def test_endpoint_template_internal_error(
 
     with pytest.raises(HTTPException) as e:
         await endpoint_template(request_model)
+        assert e.status_code == 500
