@@ -10,6 +10,7 @@ from nats import NATS
 from nats.js import JetStreamContext, JetStreamManager
 
 from linuxforhealth.healthos.core.config import CoreServiceConfig
+from linuxforhealth.healthos.core.connector import PublishDataModel
 from tests.support import resources_directory
 
 from .support import AsyncIterator
@@ -104,3 +105,13 @@ def core_configuration(resources_path) -> Callable:
         return CoreServiceConfig(**core_data)
 
     return _load_core_configuration
+
+
+@pytest.fixture
+def publish_model():
+    """Returns a PublishDataModel fixture for use with Mock object results"""
+    return PublishDataModel(
+        data_id="397a48ce-088d-4354-9b15-9d47806440cd",
+        content_type="text/hl7v2",
+        data="valid-hl7v2-data-payload",
+    )

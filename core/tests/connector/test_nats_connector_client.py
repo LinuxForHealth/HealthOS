@@ -43,16 +43,6 @@ def connector_configs() -> List[ConnectorConfig]:
     return configs
 
 
-@pytest.fixture
-def publish_model():
-    """Returns a PublishDataModel fixture"""
-    return PublishDataModel(
-        data_id="397a48ce-088d-4354-9b15-9d47806440cd",
-        content_type="text/hl7v2",
-        data="valid-hl7v2-data-payload",
-    )
-
-
 @pytest.mark.asyncio
 async def test_create_inbound_jetstream_clients(
     monkeypatch, mock_nats, connector_configs

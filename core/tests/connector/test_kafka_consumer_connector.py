@@ -1,5 +1,5 @@
 """
-test_kafka_consumer.py
+test_kafka_consumer_connector.py
 
 Tests the KafkaConsumer connector.
 """
@@ -10,9 +10,8 @@ import pytest
 
 from linuxforhealth.healthos.core.config import ConnectorConfig
 from linuxforhealth.healthos.core.connector.kafka import (
-    AIOKafkaConsumer, PublishDataModel, consume_message,
-    create_kafka_consumer_connector, get_kafka_consumer_connectors,
-    process_data)
+    AIOKafkaConsumer, consume_message, create_kafka_consumer_connector,
+    get_kafka_consumer_connectors, process_data)
 
 
 @pytest.fixture
@@ -43,16 +42,6 @@ def connector_configs() -> List[ConnectorConfig]:
 
     configs: List[ConnectorConfig] = [ConnectorConfig(**c) for c in config_data]
     return configs
-
-
-@pytest.fixture
-def publish_model():
-    """Returns a PublishDataModel fixture"""
-    return PublishDataModel(
-        data_id="397a48ce-088d-4354-9b15-9d47806440cd",
-        content_type="text/hl7v2",
-        data="valid-hl7v2-data-payload",
-    )
 
 
 @pytest.mark.asyncio
