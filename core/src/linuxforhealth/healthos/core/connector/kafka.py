@@ -12,30 +12,41 @@ from aiokafka import AIOKafkaConsumer
 from ..config import ConnectorConfig
 from .processor import PublishDataModel, process_data
 
-kafka_consumer_connectors: List[AIOKafkaConsumer]
+kafka_consumer_connectors: List[AIOKafkaConsumer] | None = None
 
 logger = logging.getLogger(__name__)
+
+
+async def consume_message(kafka_consumer: AIOKafkaConsumer):
+    """
+    Consumes messages from a Kafka Consumer
+
+    :param kafka_consumer: the aiokafka consumer
+    """
+    async for msg in kafka_consumer:
+        try:
+            data_message = msg.value.decode("utf-8")
+            publish_model: PublishDataModel = await process_data(data_message)
+
+            logger.debug(
+                f"published data to NATS data_id = {publish_model.data_id} "
+                + f"content_type = {publish_model.content_type}"
+            )
+        except ValueError as ve:
+            logger.warning(f"Invalid message. Exception {ve}")
 
 
 async def consume_message_task(kafka_consumer: AIOKafkaConsumer):
     """
     AsyncIO task used to consume messages from a Kafka Consumer.
+
+    :param kafka_consumer: The aiokafka consumer.
     """
     logger.debug(
         f"Running Kafka Consumer Task, subscribed to {kafka_consumer.subscription()}"
     )
     while True:
-        async for msg in kafka_consumer:
-            try:
-                data_message = msg.value.decode("utf-8")
-                publish_model: PublishDataModel = await process_data(data_message)
-
-                logger.debug(
-                    f"published data to NATS data_id = {publish_model.data_id} "
-                    + f"content_type = {publish_model.content_type}"
-                )
-            except ValueError as ve:
-                logger.warning(f"Invalid message. Exception {ve}")
+        await consume_message(kafka_consumer)
 
 
 async def create_kafka_consumer_connector(
