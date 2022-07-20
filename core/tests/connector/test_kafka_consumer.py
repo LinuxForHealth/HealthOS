@@ -83,7 +83,7 @@ async def test_get_and_create_kafka_consumer_connectors(monkeypatch, connector_c
 
 
 @pytest.mark.asyncio
-async def test_consume_message(monkeypatch, kafka_consumer, publish_model):
+async def test_consume_message(monkeypatch, mock_kafka_consumer, publish_model):
     """
     Tests consume messages when processing completes as expected
     """
@@ -93,7 +93,7 @@ async def test_consume_message(monkeypatch, kafka_consumer, publish_model):
         "linuxforhealth.healthos.core.connector.kafka.process_data", process_data_mock
     )
 
-    mock_consumer = kafka_consumer([b"ADT-hl7v2-message", b"ORU-hl7v2-message"])
+    mock_consumer = mock_kafka_consumer([b"ADT-hl7v2-message", b"ORU-hl7v2-message"])
     await consume_message(mock_consumer)
 
     expected_calls = [call("ADT-hl7v2-message"), call("ORU-hl7v2-message")]

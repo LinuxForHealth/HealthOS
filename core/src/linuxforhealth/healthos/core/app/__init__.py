@@ -19,8 +19,8 @@ from ..config import (ConnectorConfig, CoreServiceConfig,
 from ..connector import (create_inbound_connector_route,
                          create_inbound_jetstream_clients,
                          create_jetstream_core_client,
-                         create_kafka_consumer_connector, get_jetstream_client,
-                         get_jetstream_core_client,
+                         create_kafka_consumer_connector,
+                         get_jetstream_clients, get_jetstream_core_client,
                          get_kafka_consumer_connectors)
 from .admin import router as admin_router
 
@@ -159,7 +159,7 @@ async def close_connectors():
         logger.info(f"Stopping Kafka Connectors")
         await k.stop()
 
-    for n in get_jetstream_client():
+    for n in get_jetstream_clients():
         logger.info(f"Stopping NATS Jetstream Connectors")
         await n._nc.close()
 
