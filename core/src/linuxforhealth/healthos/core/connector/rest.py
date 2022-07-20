@@ -13,7 +13,7 @@ from nats.js.errors import NoStreamResponseError
 from pydantic import BaseModel, Field
 
 from ..detect import ContentType
-from .processor import PublishDataModel, process_data
+from .processor import process_data
 
 logger = logging.getLogger(__name__)
 
