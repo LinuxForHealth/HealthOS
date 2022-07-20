@@ -89,4 +89,6 @@ poetry run isort .
 
 ## Module documentation
 
+Please consult the following guides for module specific documentation:
+
 - [Core Module](./core/README.md)
