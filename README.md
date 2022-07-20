@@ -86,3 +86,9 @@ Use [isort](https://pycqa.github.io/isort/) to clean up the project's imports
 ```shell
 poetry run isort .
 ```
+
+## Module documentation
+
+Please consult the following guides for module specific documentation:
+
+- [Core Module](./core/README.md)
