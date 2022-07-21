@@ -58,3 +58,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 healthos = "linuxforhealth.healthos.core.cli:main"
+
+[tool.isort]
+profile = "black"
