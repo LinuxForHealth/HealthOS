@@ -9,8 +9,8 @@ from .nats import (
     create_inbound_jetstream_clients,
     create_jetstream_core_client,
     get_jetstream_clients,
-    get_jetstream_core_client,
     get_jetstream_connections,
+    get_jetstream_core_client,
 )
 from .processor import PublishDataModel
 from .rest import create_inbound_connector_route

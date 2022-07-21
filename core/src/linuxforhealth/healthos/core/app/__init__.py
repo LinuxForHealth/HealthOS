@@ -12,6 +12,7 @@ from typing import Dict, List
 
 import uvicorn
 import yaml
+from aiokafka import ConsumerStoppedError
 from fastapi import FastAPI
 from pydantic import ValidationError
 
@@ -30,7 +31,6 @@ from ..connector import (
     get_kafka_consumer_connectors,
 )
 from .admin import router as admin_router
-from aiokafka import ConsumerStoppedError
 
 logger = logging.getLogger(__name__)
 
