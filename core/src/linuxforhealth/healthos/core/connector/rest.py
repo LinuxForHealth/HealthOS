@@ -72,16 +72,18 @@ async def endpoint_template(
     :param request_model: The RestEndpoint request model.
     :return: a 200 status for completed processing or 500 status if an error occurred publishing to NATS
     """
-    data_id = str(uuid.uuid4())
-    logger.debug(f"Generated {data_id} for incoming payload")
-
     try:
         publish_model = await process_data(request_model.data)
+        logger.debug(
+            f"Generated data id {publish_model.data_id} for {publish_model.content_type}"
+        )
         return RestEndpointResponse(
-            data_id=data_id, content_type=publish_model.content_type, status="received"
+            data_id=str(publish_model.data_id),
+            content_type=publish_model.content_type,
+            status="received",
         )
     except ValueError:
-        return RestEndpointResponse(data_id=data_id, status="failed")
+        return RestEndpointResponse(data_id=str(uuid.uuid4()), status="failed")
     except NoStreamResponseError:
         raise HTTPException(
             status_code=500, detail="An internal messaging error occurred"
