@@ -100,10 +100,10 @@ def get_jetstream_core_client() -> JetStreamContext:
     return jetstream_core_client
 
 
-def get_jetstream_client() -> List[JetStreamContext]:
+def get_jetstream_clients() -> List[JetStreamContext]:
     """Returns the NATS jetstream client used for external messaging"""
     global jetstream_clients
-    return jetstream_clients
+    return jetstream_clients or []
 
 
 async def inbound_connector_callback(msg):
