@@ -5,11 +5,9 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from linuxforhealth.healthos.core.connector.rest import (HTTPException,
-                                                         NoStreamResponseError,
-                                                         RestEndpointRequest,
-                                                         RestEndpointResponse,
-                                                         endpoint_template)
+from linuxforhealth.healthos.core.connector.rest import (
+    HTTPException, NoStreamResponseError, RestEndpointRequest,
+    RestEndpointResponse, create_inbound_connector_route, endpoint_template)
 
 
 @pytest.fixture
@@ -85,3 +83,13 @@ async def test_endpoint_template_internal_error(
     with pytest.raises(HTTPException) as e:
         await endpoint_template(request_model)
         assert e.status_code == 500
+
+
+def test_create_inbound_connector_route():
+    """
+    Validates create_inbound_connector_route
+    """
+    actual_route = create_inbound_connector_route("/ingress", "post")
+    assert len(actual_route.routes) == 1
+    assert actual_route.routes[0].path == "/ingress"
+    assert actual_route.routes[0].methods == {"POST"}
