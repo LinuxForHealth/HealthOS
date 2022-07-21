@@ -18,6 +18,19 @@ The HealthOS development environment depends on the following 3rd party packages
 - [GNU Make](https://www.gnu.org/software/make/) for module builds.
 - [Pyclean](https://pypi.org/project/pyclean/) removes Python bytecode, used as a cross-platform tool in the build process. 
 
+## Quick Start
+
+The LinuxForHealth HealthOS project is composed of multiple modules, where each module is located within a separate
+HealthOS subdirectory. Each module utilizes the same build and development tooling to improve ease of use and simplify
+automation.
+
+First use `make` to build the development environments
+
+```shell
+make dev_env
+```
+
+Once the build is complete, it's time to [get started with HealthOS modules](#Module-Documentation).
 ## Build Targets
 
 The HealthOS supports the following build targets
@@ -87,7 +100,7 @@ Use [isort](https://pycqa.github.io/isort/) to clean up the project's imports
 poetry run isort .
 ```
 
-## Module documentation
+## Module Documentation
 
 Please consult the following guides for module specific documentation:
 
