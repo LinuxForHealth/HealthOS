@@ -10,8 +10,12 @@ import pytest
 
 from linuxforhealth.healthos.core.config import ConnectorConfig
 from linuxforhealth.healthos.core.connector.kafka import (
-    AIOKafkaConsumer, consume_message, create_kafka_consumer_connector,
-    get_kafka_consumer_connectors, process_data)
+    AIOKafkaConsumer,
+    consume_message,
+    create_kafka_consumer_connector,
+    get_kafka_consumer_connectors,
+    process_data,
+)
 
 
 @pytest.fixture

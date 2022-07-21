@@ -9,7 +9,9 @@ import pytest
 from nats.js.errors import NotFoundError
 
 from linuxforhealth.healthos.core.connector.nats import (
-    create_jetstream_core_client, get_jetstream_core_client)
+    create_jetstream_core_client,
+    get_jetstream_core_client,
+)
 
 
 @pytest.mark.asyncio

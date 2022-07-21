@@ -69,7 +69,7 @@ async def create_kafka_consumer_connector(
             logger.info(f"Started Kafka consumer for {k.config.bootstrap_servers}")
             kafka_consumer_connectors.append(c)
             consumer_task = asyncio.get_running_loop().create_task(
-                consume_message_task(c), name=f"kafka_consumer_{i}"
+                consume_message_task(c), name=f"healthos_kafka_consumer_{i}"
             )
             logger.info(
                 f"Created task to consume Kafka messages {consumer_task.get_name()}"

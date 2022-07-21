@@ -4,9 +4,11 @@ Tests loading and accessing the core service configuration
 import os
 
 import linuxforhealth.healthos.core.config
-from linuxforhealth.healthos.core.config import (CoreServiceConfig,
-                                                 get_core_configuration,
-                                                 load_core_configuration)
+from linuxforhealth.healthos.core.config import (
+    CoreServiceConfig,
+    get_core_configuration,
+    load_core_configuration,
+)
 
 
 def test_load_get_core_configuration(resources_path: str, monkeypatch):

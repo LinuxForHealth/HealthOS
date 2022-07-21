@@ -5,9 +5,11 @@ import os
 
 import pytest
 
-from linuxforhealth.healthos.core.detect import (ContentType,
-                                                 detect_content_type,
-                                                 validate_message)
+from linuxforhealth.healthos.core.detect import (
+    ContentType,
+    detect_content_type,
+    validate_message,
+)
 
 
 @pytest.fixture

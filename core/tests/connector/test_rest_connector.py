@@ -6,8 +6,13 @@ from unittest.mock import AsyncMock
 import pytest
 
 from linuxforhealth.healthos.core.connector.rest import (
-    HTTPException, NoStreamResponseError, RestEndpointRequest,
-    RestEndpointResponse, create_inbound_connector_route, endpoint_template)
+    HTTPException,
+    NoStreamResponseError,
+    RestEndpointRequest,
+    RestEndpointResponse,
+    create_inbound_connector_route,
+    endpoint_template,
+)
 
 
 @pytest.fixture

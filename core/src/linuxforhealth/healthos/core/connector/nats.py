@@ -24,6 +24,9 @@ jetstream_core_client: JetStreamContext | None = None
 # clients used for messaging with external systems
 jetstream_clients: List[JetStreamContext] | None = None
 
+# underlying jetstream connections, used to provide a clean shutdown
+jetstream_connections: List[nats.NATS] | None = None
+
 
 async def create_jetstream_core_client(url: str, stream_name: str, subject: str):
     """
@@ -60,6 +63,9 @@ async def create_jetstream_core_client(url: str, stream_name: str, subject: str)
     global jetstream_core_client
     jetstream_core_client = nats_connection.jetstream()
 
+    connections = get_jetstream_connections()
+    connections.append(nats_connection)
+
 
 async def create_inbound_jetstream_clients(inbound_nats_clients: List[ConnectorConfig]):
     """
@@ -93,6 +99,9 @@ async def create_inbound_jetstream_clients(inbound_nats_clients: List[ConnectorC
             await jetstream_client.subscribe(s, cb=inbound_connector_callback)
             logger.info(f"Subscribed to subject {s}")
 
+        connections = get_jetstream_connections()
+        connections.append(nats_connection)
+
 
 def get_jetstream_core_client() -> JetStreamContext:
     """Returns the NATS jetstream client used for core messaging"""
@@ -104,6 +113,14 @@ def get_jetstream_clients() -> List[JetStreamContext]:
     """Returns the NATS jetstream client used for external messaging"""
     global jetstream_clients
     return jetstream_clients or []
+
+
+def get_jetstream_connections() -> List[nats.NATS]:
+    """Returns the NATS Jetstreams connections which are currently in use"""
+    global jetstream_connections
+    if jetstream_connections is None:
+        jetstream_connections = []
+    return jetstream_connections
 
 
 async def inbound_connector_callback(msg):

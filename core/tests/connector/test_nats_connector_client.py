@@ -9,9 +9,14 @@ from unittest.mock import AsyncMock, call
 import pytest
 
 from linuxforhealth.healthos.core.connector.nats import (
-    ConnectorConfig, CoreServiceConfig, PublishDataModel,
-    create_inbound_jetstream_clients, get_jetstream_clients,
-    inbound_connector_callback, process_data)
+    ConnectorConfig,
+    CoreServiceConfig,
+    PublishDataModel,
+    create_inbound_jetstream_clients,
+    get_jetstream_clients,
+    inbound_connector_callback,
+    process_data,
+)
 
 
 @pytest.fixture

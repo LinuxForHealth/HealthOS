@@ -12,7 +12,10 @@ from nats.js import JetStreamContext
 from nats.js.errors import NoStreamResponseError
 
 from linuxforhealth.healthos.core.connector.processor import (
-    PublishDataModel, get_core_configuration, process_data)
+    PublishDataModel,
+    get_core_configuration,
+    process_data,
+)
 
 
 @pytest.fixture
