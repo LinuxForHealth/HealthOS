@@ -12,9 +12,9 @@ else
 	TARGET_MODULES := core support
 endif
 
-# removes python bytecode and untracked dependencies for a module
+# removes python bytecode and the virtual environment
 define clean_module
-	cd $(1) && pyclean . && poetry install --remove-untracked && cd ../;
+	cd $(1) && pyclean . && poetry -q env remove 3.10 && cd ../;
 endef
 
 # install all dependencies, including "dev" dependencies
@@ -32,6 +32,11 @@ define build_wheel
 	cd $(1) && poetry build -f wheel && cd ../;
 endef
 
+# removes wheels
+define remove_wheel
+	cd $(1) && rm -rf dist/ && cd ../;
+endef
+
 wheels: clean
 	$(foreach module,$(TARGET_MODULES), $(call install_dependencies_omit_dev,$(module)))
 	$(foreach module,$(TARGET_MODULES), $(call build_wheel,$(module)))
@@ -39,6 +44,7 @@ wheels: clean
 
 clean:
 	$(foreach module,$(TARGET_MODULES), $(call clean_module,$(module)))
+	$(foreach module,$(TARGET_MODULES), $(call remove_wheel,$(module)))
 .PHONY: clean
 
 dev_env: clean
