@@ -27,16 +27,19 @@ automation.
 First use `make` to build the development environments
 
 ```shell
-make dev_env
+make dev-env
 ```
 
 Once the build is complete, it's time to [get started with HealthOS modules](#Module-Documentation).
-## Build Targets
 
-The HealthOS supports the following build targets
+## HealthOS Build Targets
 
-- wheels (default): builds a Python wheel for each module.
-- dev_env: creates local development virtual environments, using poetry.
+The HealthOS supports the following build targets, which execute against one or modules within the "monorepo":
+
+- wheels (default): builds a Python wheel
+- test: executes pytest unit tests
+- format: runs the black formatter against source code, including unit tests
+- dev-env: creates local development virtual environments
 - clean: removes python bytecode and untracked dependencies from each module.
 
 ```shell
@@ -44,20 +47,19 @@ The HealthOS supports the following build targets
 make 
 
 # executes the dev_env target for all modules
-make dev_env
+make dev-env
 ```
 
 Build targets will operate on all modules, by default. To override this behavior, set and export the TARGET_MODULES variable.
 ```shell
 # multiple modules are delimited by a space
-export TARGET_MODULES="support core"
-make dev_env
+export TARGET_MODULES="core <other module> <some other module>"
+make dev-env
 ```
 
 ## Common Development Environment
-Each HealthOS module utilizes the same tooling and conventions. [Poetry](https://python-poetry.org/) is the primary
-tool used to provide the standard development workflow. The following sections highlight the common commands used
-within a HealthOS module, or "sub-directory".
+Each HealthOS module utilizes the same tooling and conventions. [Poetry](https://python-poetry.org/) provides
+a standard development workflow. The following co
 
 ### Dependency Management
 To add a dependency to a module, execute the following command:
