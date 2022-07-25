@@ -47,24 +47,39 @@ define remove_wheel
 	cd $(1) && rm -rf dist/ && cd ../;
 endef
 
+# builds a module package including a wheel and boilerplate config
+define package_module
+	mkdir -p install/$(1)
+	cp $(1)/dist/linuxforhealth_healthos*whl install/$(1)
+endef
+
+# builds the deployment package
+package: wheels
+	$(foreach module,$(TARGET_MODULES),$(call package_module,$(module)))
+.PHONY: package
+
+clean-package:
+	$(foreach module,$(TARGET_MODULES),rm -rf install/$(module))
+.PHONY: clean-package
+
 wheels:
-	$(foreach module,$(TARGET_MODULES), $(call install_dependencies_omit_dev,$(module)))
-	$(foreach module,$(TARGET_MODULES), $(call build_wheel,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call install_dependencies_omit_dev,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call build_wheel,$(module)))
 .PHONY: wheels
 
 test:
-	$(foreach module,$(TARGET_MODULES), $(call test_module, $(module)))
+	$(foreach module,$(TARGET_MODULES),$(call test_module,$(module)))
 .PHONY: test
 
 format:
-	$(foreach module,$(TARGET_MODULES), $(call format_module,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call format_module,$(module)))
 .PHONY: format
 
 dev-env: clean
-	$(foreach module,$(TARGET_MODULES), $(call install_dev_dependencies,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call install_dev_dependencies,$(module)))
 .PHONY: dev-env
 
 clean:
-	$(foreach module,$(TARGET_MODULES), $(call clean_module,$(module)))
-	$(foreach module,$(TARGET_MODULES), $(call remove_wheel,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call clean_module,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call remove_wheel,$(module)))
 .PHONY: clean
