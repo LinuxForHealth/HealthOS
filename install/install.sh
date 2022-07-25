@@ -14,6 +14,14 @@ do
   mkdir -p "$BASE_INSTALL_DIRECTORY"/"$module"
 done
 
+# install libraries
 apt update -y
-apt install -y python3 \
-               systemd
+apt install -y python3
+
+
+python3 -m venv "$BASE_INSTALL_DIRECTORY"/venv
+source
+
+
+
+

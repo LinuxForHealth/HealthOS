@@ -49,17 +49,22 @@ endef
 
 # builds a module package including a wheel and boilerplate config
 define package_module
-	mkdir -p install/$(1)
-	cp $(1)/dist/linuxforhealth_healthos*whl install/$(1)
+	mkdir -p install/opt/healthos/$(1)
+	cp $(1)/dist/linuxforhealth_healthos*whl install/opt/healthos/$(1)
+	cp $(1)/resources/service-config/healthos*config.yml install/opt/healthos/$(1)
+	cd $(1) && poetry export -f requirements.txt --without-hashes -o ../install/opt/healthos/$(1)/requirements.txt && cd ../;
 endef
 
 # builds the deployment package
 package: wheels
 	$(foreach module,$(TARGET_MODULES),$(call package_module,$(module)))
+	cd install &&  tar -C ./opt -cvzf linuxforhealth-healthos.tar.gz . && cd ../;
+	rm -rf install/opt
 .PHONY: package
 
 clean-package:
-	$(foreach module,$(TARGET_MODULES),rm -rf install/$(module))
+	rm -rf install/opt
+	rm -f lfh-healthos*tar.gz
 .PHONY: clean-package
 
 wheels:
