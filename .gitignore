@@ -121,4 +121,4 @@ dmypy.json
 
 # install package - exclude packaged modules, but include install script
 install/
-!install/install.sh
+!install.sh

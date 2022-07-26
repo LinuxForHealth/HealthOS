@@ -12,6 +12,9 @@ else
 	TARGET_MODULES := core
 endif
 
+# the base directory used for the build process
+BASE_BUILD_DIR = install/healthos
+
 # executes tests for each module
 define test_module
 	cd $(1) && poetry run pytest && cd ../;
@@ -49,22 +52,23 @@ endef
 
 # builds a module package including a wheel and boilerplate config
 define package_module
-	mkdir -p install/opt/healthos/$(1)
-	cp $(1)/dist/linuxforhealth_healthos*whl install/opt/healthos/$(1)
-	cp $(1)/resources/service-config/healthos*config.yml install/opt/healthos/$(1)
-	cd $(1) && poetry export -f requirements.txt --without-hashes -o ../install/opt/healthos/$(1)/requirements.txt && cd ../;
+	mkdir -p $(BASE_BUILD_DIR)/$(1)
+	cp $(1)/dist/linuxforhealth_healthos*whl $(BASE_BUILD_DIR)/$(1)
+	cp $(1)/resources/service-config/healthos*config.yml $(BASE_BUILD_DIR)/$(1)
+	cd $(1) && poetry export -f requirements.txt --without-hashes -o ../$(BASE_BUILD_DIR)/$(1)/requirements.txt && cd ../;
 endef
 
 # builds the deployment package
-package: wheels
+package: clean-package wheels
+	mkdir -p $(BASE_BUILD_DIR)
+	cp install.sh $(BASE_BUILD_DIR)/install.sh
 	$(foreach module,$(TARGET_MODULES),$(call package_module,$(module)))
-	cd install &&  tar -C ./opt -cvzf linuxforhealth-healthos.tar.gz . && cd ../;
-	rm -rf install/opt
+	tar -C install -cvzf lfh-healthos.tar.gz .
+	mv lfh-healthos*tar.gz install/.
 .PHONY: package
 
 clean-package:
-	rm -rf install/opt
-	rm -f lfh-healthos*tar.gz
+	rm -rf install
 .PHONY: clean-package
 
 wheels:
