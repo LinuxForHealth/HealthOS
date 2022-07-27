@@ -12,6 +12,9 @@ else
 	TARGET_MODULES := core
 endif
 
+# the base directory used for the build process
+BASE_BUILD_DIR = install/healthos
+
 # executes tests for each module
 define test_module
 	cd $(1) && poetry run pytest && cd ../;
@@ -47,24 +50,45 @@ define remove_wheel
 	cd $(1) && rm -rf dist/ && cd ../;
 endef
 
+# builds a module package including a wheel and boilerplate config
+define package_module
+	mkdir -p $(BASE_BUILD_DIR)/$(1)
+	cp $(1)/dist/linuxforhealth_healthos*whl $(BASE_BUILD_DIR)/$(1)
+	cp $(1)/resources/service-config/healthos*config.yml $(BASE_BUILD_DIR)/$(1)
+	cd $(1) && poetry export -f requirements.txt --without-hashes -o ../$(BASE_BUILD_DIR)/$(1)/requirements.txt && cd ../;
+endef
+
+# builds the deployment package
+package: clean-package wheels
+	mkdir -p $(BASE_BUILD_DIR)
+	cp install.sh $(BASE_BUILD_DIR)/install.sh
+	$(foreach module,$(TARGET_MODULES),$(call package_module,$(module)))
+	tar -C install -cvzf lfh-healthos.tar.gz .
+	mv lfh-healthos*tar.gz install/.
+.PHONY: package
+
+clean-package:
+	rm -rf install
+.PHONY: clean-package
+
 wheels:
-	$(foreach module,$(TARGET_MODULES), $(call install_dependencies_omit_dev,$(module)))
-	$(foreach module,$(TARGET_MODULES), $(call build_wheel,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call install_dependencies_omit_dev,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call build_wheel,$(module)))
 .PHONY: wheels
 
 test:
-	$(foreach module,$(TARGET_MODULES), $(call test_module, $(module)))
+	$(foreach module,$(TARGET_MODULES),$(call test_module,$(module)))
 .PHONY: test
 
 format:
-	$(foreach module,$(TARGET_MODULES), $(call format_module,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call format_module,$(module)))
 .PHONY: format
 
 dev-env: clean
-	$(foreach module,$(TARGET_MODULES), $(call install_dev_dependencies,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call install_dev_dependencies,$(module)))
 .PHONY: dev-env
 
 clean:
-	$(foreach module,$(TARGET_MODULES), $(call clean_module,$(module)))
-	$(foreach module,$(TARGET_MODULES), $(call remove_wheel,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call clean_module,$(module)))
+	$(foreach module,$(TARGET_MODULES),$(call remove_wheel,$(module)))
 .PHONY: clean

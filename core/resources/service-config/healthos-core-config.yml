@@ -1,0 +1,18 @@
+connectors:
+  - type: inbound
+    id: rest-connector
+    name: Tutorial RestEndpoint Connector
+    config:
+      type: RestEndpoint
+      url: /ingress
+      http_method: post
+app:
+  port: 8080
+  host: localhost
+  debug: False
+  messaging:
+    url: "nats://localhost:4222"
+    stream_name: healthos
+    inbound_subject: ingress
+
+logging_config: /opt/lfh/healthos/logging.yml

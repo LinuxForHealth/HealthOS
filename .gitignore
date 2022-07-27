@@ -118,3 +118,7 @@ dmypy.json
 
 # pyenv
 .python-version
+
+# install package - exclude packaged modules, but include install script
+install/
+!install.sh
