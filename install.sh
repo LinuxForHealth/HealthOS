@@ -8,7 +8,7 @@
 # -d: /opt/healthos
 # -u: healthos
 # -g: lfh
-# -n: https://github.com/nats-io/nats-server/archive/refs/tags/v2.8.4.tar.gz
+# -n: https://github.com/nats-io/nats-server/releases/download/v2.8.4/nats-server-v2.8.4-arm64.deb
 
 set -Eeuo pipefail
 
@@ -16,7 +16,7 @@ set -Eeuo pipefail
 directory=/opt/healthos
 username=healthos
 group=lfh
-nats=https://github.com/nats-io/nats-server/archive/refs/tags/v2.8.4.tar.gz
+nats=https://github.com/nats-io/nats-server/releases/download/v2.8.4/nats-server-v2.8.4-arm64.deb
 
 # handle script arguments
 INSTALL_ARGS=$(getopt -o d: --long directory: -- "$@")
@@ -60,7 +60,9 @@ echo "installing OS dependencies"
 apt update -y
 apt install -y python3 \
                python3.10-venv \
-               systemd
+               systemd \
+               wget
+
 
 echo "Creating user and groups for LinuxForHealth HealthOS . . ."
 echo "HealthOS User $username"
@@ -92,6 +94,15 @@ done
 echo "Updating owner and groups on HealthOS directories"
 chown -R healthos:lfh /opt/healthos
 
-if ! [[ -f /opt/nats ]]; then
-  echo "nats does not exist"
+
+nats_version=$(nats-server --version || true )
+
+if [[ "$nats_version" != "" ]]; then
+  apt remove -y nats-server
 fi
+
+echo "installing NATS server"
+cd /opt && \
+   wget "$nats" && \
+   apt install -y ./nats-server* && \
+   rm nats-server*

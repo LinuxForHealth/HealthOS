@@ -65,6 +65,6 @@ Return to the first terminal session, which is running the container shell, and 
 ```shell
 cd /opt
 tar -xvzf lfh-healthos*tar.gz
-cd /healthos
+cd healthos
 ./install.sh
 ```
