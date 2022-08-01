@@ -2,40 +2,86 @@
 # install.sh
 # installs HealthOS components onto a target system.
 #
-# Arguments:
-# BASE_INSTALL_DIRECTORY: the base directory for the installation. Defaults to /opt/healthos
-# HEALTHOS_USER: The user account used to run services. Defaults to healthos.
-# HEALTHOS_GROUP: The group account used to manage HealthOS software. Defaults to lfh.
+# Usage:
+# install.sh [-d --directory] [-u --username] [-g --group] [-n --nats]
+# Defaults:
+# -d: /opt/healthos
+# -u: healthos
+# -g: lfh
+# -n: https://github.com/nats-io/nats-server/releases/download/v2.8.4/nats-server-v2.8.4-arm64.deb
+
 set -Eeuo pipefail
 
-BASE_INSTALL_DIRECTORY=${1:-/opt/healthos}
-HEALTHOS_USER=${2:-healthos}
-HEALTHOS_GROUP=${3:-lfh}
+# set defaults for script arguments
+directory=/opt/healthos
+username=healthos
+group=lfh
+nats=https://github.com/nats-io/nats-server/releases/download/v2.8.4/nats-server-v2.8.4-arm64.deb
+
+# handle script arguments
+INSTALL_ARGS=$(getopt -o d: --long directory: -- "$@")
+eval set -- "$INSTALL_ARGS"
+
+while true; do
+  case "$1" in
+    -d|--directory)
+      directory="$2"
+      shift 2
+      ;;
+    -u|--username)
+      username="$2"
+      shift 2
+      ;;
+    -g|--group)
+      group="$2"
+      shift 2
+      ;;
+    -n|--nats)
+      nats="$2"
+      shift 2
+      ;;
+    --)
+      shift;
+      break
+      ;;
+  esac
+done
+
+echo "******************************"
+echo "Preparing to install HealthOS"
+echo "Installation arguments:"
+echo "directory = $directory"
+echo "username = $username"
+echo "group = $group"
+echo "nats = $nats"
+echo "******************************"
 
 echo "installing OS dependencies"
 apt update -y
 apt install -y python3 \
                python3.10-venv \
-               systemd
+               systemd \
+               wget
+
 
 echo "Creating user and groups for LinuxForHealth HealthOS . . ."
-echo "HealthOS User $HEALTHOS_USER"
-echo "HealthOS Group $HEALTHOS_GROUP"
+echo "HealthOS User $username"
+echo "HealthOS Group $group"
 
-if ! getent passwd "$HEALTHOS_GROUP" > /dev/null 2>&1; then
-  addgroup "$HEALTHOS_GROUP"
+if ! getent passwd "$group" > /dev/null 2>&1; then
+  addgroup "$group"
 fi
 
-if ! getent passwd "$HEALTHOS_USER" > /dev/null 2>&1; then
-  adduser --disabled-password --ingroup "$HEALTHOS_GROUP" --gecos "" "$HEALTHOS_USER"
+if ! getent passwd "$username" > /dev/null 2>&1; then
+  adduser --disabled-password --ingroup "$group" --gecos "" "$username"
 fi
 
-HEALTHOS_MODULES=( core )
-for module in "${HEALTHOS_MODULES[@]}"
+healthos_modules=( core )
+for module in "${healthos_modules[@]}"
 do
   echo "configuring $module module"
-  venv_path="$BASE_INSTALL_DIRECTORY"/"$module"/venv
-  requirements_path="$BASE_INSTALL_DIRECTORY"/"$module"
+  venv_path="$directory"/"$module"/venv
+  requirements_path="$directory"/"$module"
 
   echo "virtual environment path $venv_path"
   python3 -m venv "$venv_path"
@@ -47,3 +93,16 @@ done
 
 echo "Updating owner and groups on HealthOS directories"
 chown -R healthos:lfh /opt/healthos
+
+
+nats_version=$(nats-server --version || true )
+
+if [[ "$nats_version" != "" ]]; then
+  apt remove -y nats-server
+fi
+
+echo "installing NATS server"
+cd /opt && \
+   wget "$nats" && \
+   apt install -y ./nats-server* && \
+   rm nats-server*
