@@ -92,7 +92,7 @@ do
 done
 
 echo "Updating owner and groups on HealthOS directories"
-chown -R healthos:lfh /opt/healthos
+chown -R healthos:lfh "$directory"
 
 
 nats_version=$(nats-server --version || true )
