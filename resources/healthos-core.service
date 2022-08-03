@@ -1,0 +1,15 @@
+[Unit]
+Description=LinuxForHealth HealthOS provides an interoperable open-sourced health stack for developing highly available, standards compliant, and secure applications and services.
+Documentation=https://github.com/LinuxForHealth/HealthOS/blob/main/README.md
+Requires=nats.service
+After=nats.service
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+Restart=on-failure
+ExecStart=/opt/healthos/core/venv/bin/healthos core -f /opt/healthos/conf/healthos-core-config.yml
+
+[Install]
+WantedBy=multi-user.target

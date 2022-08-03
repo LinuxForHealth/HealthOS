@@ -45,6 +45,10 @@ tar -xvzf lfh-healthos.tar.gz
 
 ## Test HealthOS Installation With Docker
 
+Note: Docker is a useful tool for validating that the installation process completes successfully and files are placed
+in the correct locations. The docker container may not be used to start HealthOS services since the HealthOS utilizes
+systemd for process management.
+
 First, create the HealthOS package.
 
 ```shell

@@ -1,0 +1,13 @@
+[Unit]
+Description=NATS  is a simple, secure and performant communications system for digital systems, services and devices.
+Documentation=https://docs.nats.io/
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+Restart=on-failure
+ExecStart=/usr/bin/nats-server --config=/opt/healthos/conf/nats-server.conf
+
+[Install]
+Wantedby=multi-user.target
