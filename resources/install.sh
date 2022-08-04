@@ -96,7 +96,7 @@ cut -d: -f1 /etc/group | grep -i "$group" || addgroup "$group"
 cut -d: -f1 /etc/passwd | grep -i "$username" || adduser --disabled-password --ingroup "$group" --gecos "" "$username"
 
 # install rust (required for uvicorn watchfiles support)
-cargo --version || curl https://sh.rustup.rs -sSf | sh -s -- -y
+cargo --version || curl "$rust" -sSf | sh -s -- -y
 source /root/.cargo/env
 
 healthos_modules=( core )
@@ -132,7 +132,7 @@ echo "preparing configuration files"
 
 cd "$directory" && \
   mv *.service /lib/systemd/system && \
-  mv *.conf healthos-*-config.yml "$directory"/conf
+  mv *.conf healthos-*-config.yml logging.yaml "$directory"/conf
 
 echo "Updating owner and groups on HealthOS directories"
 chown -R "$username":"$group" "$directory"
@@ -140,5 +140,7 @@ chown -R "$username":"$group" "$directory"
 echo "Restoring permissions for systemd"
 chown -R root:root /lib/systemd
 
-# install is complete return to
+# install is complete return to our base directory
 cd "$directory"
+
+systemctl start healthos-core.service

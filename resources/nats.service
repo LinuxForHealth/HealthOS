@@ -7,7 +7,7 @@ StartLimitBurst=5
 [Service]
 Type=simple
 Restart=on-failure
-ExecStart=/usr/bin/nats-server --config=/opt/healthos/conf/nats-server.conf
+ExecStart=/usr/local/bin/nats-server --config=/opt/healthos/conf/nats-server.conf
 
 [Install]
 Wantedby=multi-user.target

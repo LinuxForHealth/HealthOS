@@ -15,4 +15,4 @@ app:
     stream_name: healthos
     inbound_subject: ingress
 
-logging_config: logging.yaml
+logging_config: /opt/healthos/conf/logging.yaml

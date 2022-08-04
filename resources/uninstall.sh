@@ -44,6 +44,7 @@ echo "*******************************"
 
 echo "*******************************"
 echo "remove healthos installation directory"
+echo "*******************************"
 
 if [[ "$directory" == "/" ]]; then
   "directory is set to /, skipping deletion . . . "
@@ -53,5 +54,16 @@ fi
 
 echo "*******************************"
 echo "remove python 3.10"
+echo "*******************************"
 apt remove -y python3 python3.10-venv
+
+echo "*******************************"
+echo "remove nats-server"
+echo "*******************************"
+apt remove -y nats-server
+
+echo "*******************************"
+echo "tidy up"
+echo "*******************************"
+
 apt autoremove -y
