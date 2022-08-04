@@ -42,33 +42,3 @@ cd /opt
 tar -xvzf lfh-healthos.tar.gz
 ./healthos/install.sh
 ```
-
-## Test HealthOS Installation With Docker
-
-Note: Docker is a useful tool for validating that the installation process completes successfully and files are placed
-in the correct locations. The docker container may not be used to start HealthOS services since the HealthOS utilizes
-systemd for process management.
-
-First, create the HealthOS package.
-
-```shell
-user@workstation HealthOS % make
-```
-
-Next, launch an ephemeral docker container and open a shell.
-```shell
-user HealthOS % docker run -it --rm --name jammy ubuntu:jammy bash
-```
-
-In a second terminal session, copy the installation package into the container.
-```shell
-docker cp install/lfh-healthos*tar.gz jammy:/opt
-```
-
-Return to the first terminal session, which is running the container shell, and extract the installation package.
-```shell
-cd /opt
-tar -xvzf lfh-healthos*tar.gz
-cd healthos
-./install.sh
-```
