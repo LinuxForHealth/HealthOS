@@ -61,7 +61,7 @@ endef
 # builds the deployment package
 package: clean-package wheels
 	mkdir -p $(BASE_BUILD_DIR)
-	cp install.sh $(BASE_BUILD_DIR)/install.sh
+	cp resources/* $(BASE_BUILD_DIR)/
 	$(foreach module,$(TARGET_MODULES),$(call package_module,$(module)))
 	tar -C install -cvzf lfh-healthos.tar.gz .
 	mv lfh-healthos*tar.gz install/.
