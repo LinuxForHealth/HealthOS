@@ -6,13 +6,20 @@ Common data processing implementations for HealthOS connectors.
 import json
 import logging
 import uuid
+from typing import Optional
 
 from nats.js import JetStreamContext
 from nats.js.errors import NoStreamResponseError
 from pydantic import BaseModel, Field
-from typing import Optional
+
 from ..config import get_core_configuration
-from ..detect import ContentType, validate_message, detect_content_type, ContentTypeError, DataValidationError
+from ..detect import (
+    ContentType,
+    ContentTypeError,
+    DataValidationError,
+    detect_content_type,
+    validate_message,
+)
 
 logger = logging.getLogger(__name__)
 

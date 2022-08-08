@@ -8,8 +8,8 @@ from enum import Enum
 from typing import Dict, Optional
 
 import hl7
-from hl7 import ParseException
 from fhir.resources import construct_fhir_element
+from hl7 import ParseException
 from linuxforhealth.x12.io import X12ModelReader
 from pydantic import ValidationError
 
@@ -20,6 +20,7 @@ class ContentTypeError(Exception):
     """
     Raised when a message has an invalid or unsupported content type.
     """
+
     pass
 
 
@@ -27,6 +28,7 @@ class DataValidationError(Exception):
     """
     Raised when a data message contains validation errors.
     """
+
     pass
 
 

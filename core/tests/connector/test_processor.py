@@ -12,10 +12,10 @@ from nats.js import JetStreamContext
 from nats.js.errors import NoStreamResponseError
 
 from linuxforhealth.healthos.core.connector.processor import (
+    ContentTypeError,
     PublishDataModel,
     get_core_configuration,
     process_data,
-    ContentTypeError
 )
 
 
@@ -58,7 +58,7 @@ async def test_process_data(
     """
     monkeypatch.setattr(
         "linuxforhealth.healthos.core.connector.processor.get_core_configuration",
-        lambda:  core_configuration("core-service.yml"),
+        lambda: core_configuration("core-service.yml"),
     )
 
     mock_js_client = AsyncMock(spec=JetStreamContext)

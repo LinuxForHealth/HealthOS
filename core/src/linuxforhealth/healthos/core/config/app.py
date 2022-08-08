@@ -5,7 +5,7 @@ Defines the data model used to support the Core service's "app" configuration.
 The Core service app provides the event loop used for core service components such as connectors, as
 well as Admin API interfaces.
 """
-from typing import Optional, Literal
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
