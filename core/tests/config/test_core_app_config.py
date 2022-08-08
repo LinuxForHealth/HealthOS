@@ -18,8 +18,6 @@ def config_data() -> Dict:
         "debug": True,
         "messaging": {
             "url": "nats://0.0.0.0:4223",
-            "stream_name": "core",
-            "inbound_subject": "landing_zone",
         },
     }
 
@@ -31,8 +29,9 @@ def test_validate_minimum_input(config_data: Dict):
     assert config.host == "0.0.0.0"
     assert config.debug is True
     assert config.messaging.url == "nats://0.0.0.0:4223"
-    assert config.messaging.stream_name == "core"
-    assert config.messaging.inbound_subject == "landing_zone"
+    assert config.messaging.stream_name == "healthos"
+    assert config.messaging.ingress_subject == "core.ingress"
+    assert config.messaging.error_subject == "core.error"
 
 
 def test_defaults(config_data: Dict):
@@ -43,4 +42,5 @@ def test_defaults(config_data: Dict):
     assert config.debug is False
     assert config.messaging.url == "nats://localhost:4222"
     assert config.messaging.stream_name == "healthos"
-    assert config.messaging.inbound_subject == "ingress"
+    assert config.messaging.ingress_subject == "core.ingress"
+    assert config.messaging.error_subject == "core.error"

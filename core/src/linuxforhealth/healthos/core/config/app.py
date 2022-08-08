@@ -5,7 +5,7 @@ Defines the data model used to support the Core service's "app" configuration.
 The Core service app provides the event loop used for core service components such as connectors, as
 well as Admin API interfaces.
 """
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -19,14 +19,9 @@ class CoreAppMessaging(BaseModel):
         description="The URL for the core application messaging service (NATS Jetstream).",
         default="nats://localhost:4222",
     )
-    stream_name: str = Field(
-        description="The messaging stream name. Defaults to healthos.",
-        default="healthos",
-    )
-    inbound_subject: str = Field(
-        description="The messaging subject used to receive all inbound/ingress messages",
-        default="ingress",
-    )
+    stream_name: Literal["healthos"] = "healthos"
+    ingress_subject: Literal["core.ingress"] = "core.ingress"
+    error_subject: Literal["core.error"] = "core.error"
 
     class Config:
         extra = "forbid"

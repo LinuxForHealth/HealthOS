@@ -7,6 +7,8 @@ import pytest
 
 from linuxforhealth.healthos.core.detect import (
     ContentType,
+    ContentTypeError,
+    DataValidationError,
     detect_content_type,
     validate_message,
 )
@@ -52,7 +54,7 @@ def test_detect_content_type_exception(sample_data_path: str):
     with open(file_path) as f:
         input_message = "".join(f.readlines())
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ContentTypeError):
         detect_content_type(input_message)
 
 
@@ -91,5 +93,5 @@ def test_validate_message_exception(sample_data_path: str):
     with open(file_path) as f:
         input_message = "".join(f.readlines())
 
-    with pytest.raises(ValueError):
+    with pytest.raises(DataValidationError):
         validate_message(input_message)
