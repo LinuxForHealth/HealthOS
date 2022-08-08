@@ -85,6 +85,7 @@ def core_startup(args):
         startup_internal_nats = partial(
             create_jetstream_core_client,
             core_config.app.messaging.url,
+            core_config.app.messaging.stream_name,
             [
                 core_config.app.messaging.ingress_subject,
                 core_config.app.messaging.error_subject,
