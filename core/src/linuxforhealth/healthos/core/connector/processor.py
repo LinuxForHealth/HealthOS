@@ -50,7 +50,7 @@ async def process_data(msg: str) -> PublishDataModel:
         content_type = detect_content_type(msg)
         publish_data["content_type"] = content_type
         validate_message(msg)
-    except (ContentTypeError, DataValidationError, KeyError, AttributeError) as ex:
+    except (ContentTypeError, DataValidationError) as ex:
         msg = f"Exception occurred processing data {ex}"
         logger.error(msg)
         publish_data["error"] = str(ex)
