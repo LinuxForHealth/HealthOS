@@ -28,16 +28,16 @@ jetstream_clients: List[JetStreamContext] | None = None
 jetstream_connections: List[nats.NATS] | None = None
 
 
-async def create_jetstream_core_client(url: str, stream_name: str, subject: str):
+async def create_jetstream_core_client(url: str, stream_name: str, subjects: str):
     """
     Creates a NATS client for the Core service.
     Additional operations include:
-    - creating the target stream and subject if they do not exist
+    - creating the target stream and subjects if they do not exist
     - associating the target subject with the NATS client instance
 
     :param url: The NATS server url, including protocol, host, and port.
     :param stream_name: The NATS server stream name
-    :param subject: The NATS server subject which is published to
+    :param subjects: The NATS server subjects used by the core module
     :return:
     """
     nats_connection: nats.NATS
@@ -58,7 +58,7 @@ async def create_jetstream_core_client(url: str, stream_name: str, subject: str)
     except NotFoundError:
         logger.info("HealthOS Stream Not Found Within NATS Jetstream Server")
         logger.info("Creating HealthOS Stream")
-        await jetstream_mgr.add_stream(name=stream_name, subjects=[subject])
+        await jetstream_mgr.add_stream(name=stream_name, subjects=subjects)
 
     global jetstream_core_client
     jetstream_core_client = nats_connection.jetstream()
@@ -138,5 +138,5 @@ async def inbound_connector_callback(msg):
     msg_str = msg.data.decode("utf-8")
     publish_model: PublishDataModel = await process_data(msg_str)
 
-    logger.debug(f"published message to {messaging_config.inbound_subject}")
+    logger.debug(f"published message to {messaging_config.ingress_subject}")
     logger.debug(f"message metadata {publish_model.dict()}")

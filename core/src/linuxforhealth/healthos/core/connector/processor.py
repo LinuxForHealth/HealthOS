@@ -55,18 +55,18 @@ async def process_data(msg: str) -> PublishDataModel:
 
     try:
         publish_ack = await core_client.publish(
-            subject=messaging_config.inbound_subject,
+            subject=messaging_config.ingress_subject,
             stream=messaging_config.stream_name,
             payload=message_payload,
         )
     except NoStreamResponseError as nsre:
-        msg = f"Unable to publish message to {messaging_config.stream_name}:{messaging_config.inbound_subject}"
+        msg = f"Unable to publish message to {messaging_config.stream_name}:{messaging_config.ingress_subject}"
         logger.error(msg)
         logger.error(f"NATS NoStreamResponseError {nsre}")
         raise
     else:
         logger.debug(
-            f"publishing to NATS {messaging_config.stream_name}:{messaging_config.inbound_subject}"
+            f"publishing to NATS {messaging_config.stream_name}:{messaging_config.ingress_subject}"
         )
         logger.debug(f"received NATS Ack {publish_ack}")
         logger.debug(f"returning status = received, id = {publish_model.data_id}")
