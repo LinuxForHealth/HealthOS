@@ -57,7 +57,7 @@ services:
       timeout: 10s
       retries: 4
     depends_on:
-      - zookeeper
+      - external-zookeeper
     profiles:
       - demo
     volumes:
